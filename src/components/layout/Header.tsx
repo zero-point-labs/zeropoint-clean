@@ -2,14 +2,12 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-// import { ShimmerButton } from '@/components/magicui/ShimmerButton'; // No longer using ShimmerButton here
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, Variants, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { Menu, X, Sparkles, ChevronRight, User, LogOut } from 'lucide-react';
+import { Menu, X, Sparkles, ChevronRight } from 'lucide-react';
 import { BorderBeam } from '@/components/magicui/border-beam';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { useTheme } from '@/lib/theme-context';
-import { useAuth } from '@/lib/auth-context';
 
 // Enhanced variants with spring animations
 const headerVariants: Variants = {
@@ -182,103 +180,12 @@ const ThemeMenuItem = ({ onClick, delay }: { onClick: () => void; delay: number 
   );
 };
 
-// User menu item for authenticated users
-const UserMenuItem = ({ onClick, delay }: { onClick: () => void; delay: number }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const { theme } = useTheme();
-  const { user, isDemoMode, logout } = useAuth();
-  
-  const handleLogout = async () => {
-    await logout();
-    onClick(); // Close menu
-  };
-  
-  if (!user) return null;
-  
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: -40 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      className="relative"
-    >
-      <div className={`relative transition-all duration-300 tracking-wide ${
-        theme === 'dark' 
-          ? 'text-slate-200' 
-          : 'text-slate-700'
-      }`}>
-        {/* Hover background */}
-        <motion.div
-          className="absolute -left-4 -right-4 top-0 bottom-0 bg-gradient-to-r from-orange-500/5 to-orange-600/5 rounded-lg"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: isHovered ? 1 : 0, scale: isHovered ? 1 : 0.95 }}
-          transition={{ duration: 0.2 }}
-        />
-        
-        {/* User info */}
-        <div className="relative flex items-center gap-3 py-3">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
-            isDemoMode 
-              ? 'bg-orange-500 text-white' 
-              : theme === 'dark'
-                ? 'bg-white/10 text-white'
-                : 'bg-black/10 text-black'
-          }`}>
-            {user.name.charAt(0).toUpperCase()}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className={`text-sm font-medium truncate ${
-              theme === 'dark' ? 'text-white' : 'text-black'
-            }`}>
-              {user.name}
-            </p>
-            <p className={`text-xs truncate ${
-              theme === 'dark' ? 'text-slate-400' : 'text-slate-600'
-            }`}>
-              {user.email}
-            </p>
-            {isDemoMode && (
-              <span className="inline-block px-2 py-0.5 text-xs bg-orange-500/20 text-orange-400 rounded-full mt-1">
-                Demo Mode
-              </span>
-            )}
-          </div>
-        </div>
-        
-        {/* Logout button */}
-        <div className="relative flex items-center gap-3 py-2">
-          <motion.div
-            className="relative w-8 h-[2px] bg-gradient-to-r from-orange-400 to-orange-600 rounded-full"
-            initial={{ width: "8px" }}
-            animate={{ width: isHovered ? "24px" : "8px" }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-          />
-          <button
-            onClick={handleLogout}
-            className={`text-sm transition-colors ${
-              theme === 'dark' 
-                ? 'text-slate-400 hover:text-orange-400' 
-                : 'text-slate-600 hover:text-orange-500'
-            }`}
-          >
-            <LogOut className="w-4 h-4 inline mr-2" />
-            Sign Out
-          </button>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const lastScrollYRef = useRef(0);
   const { theme } = useTheme();
-  const { user, isLoading } = useAuth();
   
   // Mouse position tracking for gradient effect
   const mouseX = useMotionValue(0);
@@ -370,122 +277,6 @@ export default function Header() {
     }
   };
 
-  // Render auth button based on user state
-  const renderAuthButton = () => {
-    if (isLoading) {
-      return (
-        <div className="w-20 h-10 bg-white/5 rounded-xl animate-pulse" />
-      );
-    }
-
-    if (user) {
-      // User is logged in - show Dashboard button
-      return (
-        <Link href="/dashboard" className="relative group">
-          <motion.div
-            className="relative px-6 py-2.5 text-sm font-medium rounded-xl overflow-hidden"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {/* Button gradient border */}
-            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 p-[1px]">
-              <div className={`absolute inset-[1px] rounded-xl ${theme === 'dark' ? 'bg-black' : 'bg-white'}`} />
-            </div>
-            
-            {/* Button content */}
-            <span className="relative z-10 bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent group-hover:from-orange-300 group-hover:to-orange-400 transition-all duration-300 flex items-center gap-2">
-              <User className="w-4 h-4 text-orange-500" />
-              Dashboard
-            </span>
-            
-            {/* Hover glow */}
-            <div className="absolute inset-0 rounded-xl bg-orange-500/0 group-hover:bg-orange-500/10 transition-all duration-300" />
-            
-            <BorderBeam size={60} duration={3} colorFrom="#fb923c" colorTo="#ea580c" />
-          </motion.div>
-        </Link>
-      );
-    } else {
-      // User is not logged in - show Sign Up button
-      return (
-        <Link href="/signup" className="relative group">
-          <motion.div
-            className="relative px-6 py-2.5 text-sm font-medium rounded-xl overflow-hidden"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {/* Button gradient border */}
-            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 p-[1px]">
-              <div className={`absolute inset-[1px] rounded-xl ${theme === 'dark' ? 'bg-black' : 'bg-white'}`} />
-            </div>
-            
-            {/* Button content */}
-            <span className="relative z-10 bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent group-hover:from-orange-300 group-hover:to-orange-400 transition-all duration-300">
-              Sign Up
-            </span>
-            
-            {/* Hover glow */}
-            <div className="absolute inset-0 rounded-xl bg-orange-500/0 group-hover:bg-orange-500/10 transition-all duration-300" />
-            
-            <BorderBeam size={60} duration={3} colorFrom="#fb923c" colorTo="#ea580c" />
-          </motion.div>
-        </Link>
-      );
-    }
-  };
-
-  // Render mobile auth button
-  const renderMobileAuthButton = () => {
-    if (isLoading) {
-      return (
-        <div className="w-full h-12 bg-white/5 rounded-xl animate-pulse" />
-      );
-    }
-
-    if (user) {
-      // User is logged in - show Dashboard button
-      return (
-        <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
-          <motion.div
-            className="relative w-full py-3.5 text-center rounded-xl overflow-hidden group"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {/* Animated gradient background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-500 opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
-            
-            {/* Shimmer effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-            
-            <span className="relative z-10 text-white font-semibold text-base flex items-center justify-center gap-2">
-              <User className="w-4 h-4" />
-              Dashboard
-            </span>
-          </motion.div>
-        </Link>
-      );
-    } else {
-      // User is not logged in - show Sign Up button
-      return (
-        <Link href="/signup" onClick={() => setIsMobileMenuOpen(false)}>
-          <motion.div
-            className="relative w-full py-3.5 text-center rounded-xl overflow-hidden group"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {/* Animated gradient background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
-            
-            {/* Shimmer effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-            
-            <span className="relative z-10 text-white font-semibold text-base">Get Started</span>
-          </motion.div>
-        </Link>
-      );
-    }
-  };
-
   return (
     <>
       <motion.header
@@ -542,10 +333,29 @@ export default function Header() {
             </Link>
           </div>
           
-          {/* Right: Conditional Auth Button - Hidden on mobile, proper width to balance layout */}
+          {/* Right: Contact Button */}
           <div className="flex-shrink-0 w-12 md:w-auto flex justify-end">
             <div className="hidden md:block">
-              {renderAuthButton()}
+              <Link href="/contact" className="relative group">
+                <motion.div
+                  className="relative px-6 py-2.5 text-sm font-medium rounded-xl overflow-hidden"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {/* Button gradient border */}
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 p-[1px]">
+                    <div className={`absolute inset-[1px] rounded-xl ${theme === 'dark' ? 'bg-black' : 'bg-white'}`} />
+                  </div>
+                  
+                  {/* Button content */}
+                  <span className="relative z-10 bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent group-hover:from-orange-300 group-hover:to-orange-400 transition-all duration-300">
+                    Contact Us
+                  </span>
+                  
+                  {/* Animated border beam */}
+                  <BorderBeam size={60} duration={3} colorFrom="#fb923c" colorTo="#ea580c" />
+                </motion.div>
+              </Link>
             </div>
           </div>
         </div>
@@ -636,17 +446,9 @@ export default function Header() {
                     onClick={() => setIsMobileMenuOpen(false)}
                     delay={navItems.length * 0.1 + 0.2}
                   />
-
-                  {/* User Menu Item - Show if logged in */}
-                  {user && (
-                    <UserMenuItem
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      delay={(navItems.length + 1) * 0.1 + 0.2}
-                    />
-                  )}
                 </nav>
 
-                {/* Bottom section with conditional auth button */}
+                {/* Bottom section with contact button */}
                 <motion.div 
                   className={`mt-auto pt-8 border-t ${
                     theme === 'dark' ? 'border-white/10' : 'border-black/10'
@@ -655,7 +457,21 @@ export default function Header() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6, duration: 0.4 }}
                 >
-                  {renderMobileAuthButton()}
+                  <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+                    <motion.div
+                      className="relative w-full py-3.5 text-center rounded-xl overflow-hidden group"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {/* Animated gradient background */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+                      
+                      {/* Shimmer effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                      
+                      <span className="relative z-10 text-white font-semibold text-base">Contact Us</span>
+                    </motion.div>
+                  </Link>
                 </motion.div>
               </div>
             </motion.div>

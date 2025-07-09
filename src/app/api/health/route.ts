@@ -9,12 +9,7 @@ export async function GET() {
       uptime: process.uptime(),
       environment: process.env.NODE_ENV,
       version: process.env.npm_package_version || '1.0.0',
-      memory: process.memoryUsage(),
-      appwrite: {
-        endpoint: process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT,
-        projectId: process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID,
-        hasApiKey: !!process.env.APPWRITE_API_KEY
-      }
+      memory: process.memoryUsage()
     };
     
     return NextResponse.json(health, { status: 200 });

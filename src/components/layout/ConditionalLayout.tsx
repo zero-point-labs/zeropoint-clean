@@ -9,13 +9,6 @@ export default function ConditionalLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const isDashboard = pathname?.startsWith("/dashboard") || pathname === "/login";
-
-  if (isDashboard) {
-    return <>{children}</>;
-  }
-
   return (
     <>
       <Header />

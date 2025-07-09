@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
 import { ThemeProvider } from "@/lib/theme-context";
-import { AuthProvider } from "@/lib/auth-context";
 import { Analytics } from "@vercel/analytics/next";
 import Script from "next/script";
 
@@ -32,13 +31,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
-        <AuthProvider>
-          <ThemeProvider>
-            <ConditionalLayout>
-              {children}
-            </ConditionalLayout>
-          </ThemeProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <ConditionalLayout>
+            {children}
+          </ConditionalLayout>
+        </ThemeProvider>
         <Analytics />
         <Script
           defer
