@@ -913,21 +913,21 @@ export default function HomepageV2() {
         {/* Hero Section */}
         <section 
           ref={heroRef}
-          className={`relative min-h-screen flex items-center justify-center px-4 md:px-8 pt-32 md:pt-40 pb-20 md:pb-24 overflow-hidden ${
+          className={`relative min-h-screen flex items-center justify-center px-6 md:px-8 pt-24 sm:pt-32 md:pt-40 pb-16 sm:pb-20 md:pb-24 overflow-hidden ${
             theme === 'light' ? 'text-slate-900' : 'text-slate-100'
           }`}
         >
-          <div className="container mx-auto max-w-4xl text-center space-y-8 md:space-y-12">
+          <div className="container mx-auto max-w-4xl text-center space-y-6 sm:space-y-8 md:space-y-12">
             
             {/* Badge */}
-            <div ref={badgeRef} className="flex items-center justify-center gap-3">
-              <div className={`relative w-10 h-10 rounded-full overflow-hidden border-2 border-orange-500/60 shadow-lg flex items-center justify-center ${
+            <div ref={badgeRef} className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+              <div className={`relative w-12 h-12 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-orange-500/60 shadow-lg flex items-center justify-center ${
                 theme === 'light' 
                   ? 'bg-orange-50/80 shadow-orange-200/60' 
                   : 'bg-orange-950/60 shadow-orange-900/60'
               }`}>
                 <span 
-                  className="text-2xl leading-none"
+                  className="text-2xl sm:text-2xl leading-none"
                   style={{
                     fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Android Emoji", "EmojiSymbols", "EmojiOne Mozilla", "Twemoji Mozilla", "Segoe UI Symbol", "Noto Emoji", emoji',
                     fontSize: '24px',
@@ -940,13 +940,13 @@ export default function HomepageV2() {
               </div>
               <Badge
                 variant="outline"
-                className={`border-orange-500/70 text-orange-400 px-5 py-2 text-sm font-semibold rounded-full shadow-md ${
+                className={`border-orange-500/70 text-orange-400 px-4 py-2 sm:px-5 sm:py-2 text-sm font-semibold rounded-full shadow-md ${
                   theme === 'light' 
                     ? 'bg-orange-50/80 shadow-orange-200/60' 
                     : 'bg-orange-950/60 shadow-orange-900/60'
                 }`}
               >
-                <AnimatedShinyText className="text-orange-400">
+                <AnimatedShinyText className="text-orange-400 text-xs sm:text-sm">
                   Cyprus Web Agency ✨
                 </AnimatedShinyText>
               </Badge>
@@ -955,32 +955,34 @@ export default function HomepageV2() {
             {/* Main Title */}
             <div
               ref={titleRef}
-              className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-extrabold tracking-tight !leading-tight"
+              className="text-2xl sm:text-3xl md:text-5xl xl:text-6xl font-extrabold tracking-tight !leading-tight px-2 sm:px-0"
             >
-              <div className={`mb-2 md:mb-4 ${theme === 'light' ? 'text-slate-900' : 'text-slate-50'}`}>
+              <div className={`mb-3 sm:mb-2 md:mb-4 ${theme === 'light' ? 'text-slate-900' : 'text-slate-50'}`}>
                 We Craft
               </div>
-              <WordRotate
-                words={[
-                  <AuroraText key="word1" className="text-orange-500 block" colors={["#FDE047", "#FDBA74", "#F97316", "#EA580C"]} speed={1.5}>Beautiful Websites</AuroraText>,
-                  <AuroraText key="word2" className="text-orange-500 block" colors={["#FDE047", "#FDBA74", "#F97316", "#EA580C"]} speed={1.5}>Digital Experiences</AuroraText>,
-                  <AuroraText key="word3" className="text-orange-500 block" colors={["#FDE047", "#FDBA74", "#F97316", "#EA580C"]} speed={1.5}>E-commerce Stores</AuroraText>,
-                  <AuroraText key="word4" className="text-orange-500 block" colors={["#FDE047", "#FDBA74", "#F97316", "#EA580C"]} speed={1.5}>Landing Pages</AuroraText>,
-                  <AuroraText key="word5" className="text-orange-500 block" colors={["#FDE047", "#FDBA74", "#F97316", "#EA580C"]} speed={1.5}>Web Applications</AuroraText>,
-                ]}
-                duration={2500}
-                motionProps={{
-                  initial: { opacity: 0, y: 30, scale: 0.9 },
-                  animate: { opacity: 1, y: 0, scale: 1 },
-                  exit: { opacity: 0, y: -30, scale: 0.9 },
-                  transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
-                }}
-              />
-              <div className={`mt-2 md:mt-4 flex items-baseline justify-center ${theme === 'light' ? 'text-slate-900' : 'text-slate-50'}`}>
-                <span>That&nbsp;</span>
+              <div className="min-h-[3rem] sm:min-h-[3.5rem] md:min-h-[4rem] xl:min-h-[5rem]">
+                <WordRotate
+                  words={[
+                    <AuroraText key="word1" className="text-orange-500 block text-2xl sm:text-3xl md:text-5xl xl:text-6xl" colors={["#FDE047", "#FDBA74", "#F97316", "#EA580C"]} speed={1.5}>Beautiful Websites</AuroraText>,
+                    <AuroraText key="word2" className="text-orange-500 block text-2xl sm:text-3xl md:text-5xl xl:text-6xl" colors={["#FDE047", "#FDBA74", "#F97316", "#EA580C"]} speed={1.5}>Digital Experiences</AuroraText>,
+                    <AuroraText key="word3" className="text-orange-500 block text-2xl sm:text-3xl md:text-5xl xl:text-6xl" colors={["#FDE047", "#FDBA74", "#F97316", "#EA580C"]} speed={1.5}>E-commerce Stores</AuroraText>,
+                    <AuroraText key="word4" className="text-orange-500 block text-2xl sm:text-3xl md:text-5xl xl:text-6xl" colors={["#FDE047", "#FDBA74", "#F97316", "#EA580C"]} speed={1.5}>Landing Pages</AuroraText>,
+                    <AuroraText key="word5" className="text-orange-500 block text-2xl sm:text-3xl md:text-5xl xl:text-6xl" colors={["#FDE047", "#FDBA74", "#F97316", "#EA580C"]} speed={1.5}>Web Applications</AuroraText>,
+                  ]}
+                  duration={2500}
+                  motionProps={{
+                    initial: { opacity: 0, y: 30, scale: 0.9 },
+                    animate: { opacity: 1, y: 0, scale: 1 },
+                    exit: { opacity: 0, y: -30, scale: 0.9 },
+                    transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
+                  }}
+                />
+              </div>
+              <div className={`mt-3 sm:mt-2 md:mt-4 flex flex-wrap items-baseline justify-center gap-1 ${theme === 'light' ? 'text-slate-900' : 'text-slate-50'}`}>
+                <span className="text-2xl sm:text-3xl md:text-5xl xl:text-6xl">That&nbsp;</span>
                 <SparklesText 
                   as={<span />}
-                  className={`text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-extrabold ${theme === 'light' ? 'text-slate-900' : 'text-white'}`}
+                  className={`text-2xl sm:text-3xl md:text-5xl xl:text-6xl font-extrabold ${theme === 'light' ? 'text-slate-900' : 'text-white'}`}
                   colors={{ first: "#FDBA74", second: "#F97316" }}
                   sparklesCount={1}
                 >
@@ -990,8 +992,8 @@ export default function HomepageV2() {
             </div>
 
             {/* Subtitle */}
-            <div ref={subtitleRef} className="space-y-4">
-              <p className={`max-w-2xl text-sm sm:text-base md:text-lg leading-relaxed mx-auto ${
+            <div ref={subtitleRef} className="space-y-4 px-2 sm:px-0">
+              <p className={`max-w-2xl text-base sm:text-base md:text-lg leading-relaxed mx-auto ${
                 theme === 'light' ? 'text-slate-600' : 'text-slate-300/90'
               }`}>
                 Transform your ideas into <span className="font-semibold text-orange-500">high-converting websites</span> that drive real results.
@@ -999,7 +1001,7 @@ export default function HomepageV2() {
             </div>
 
             {/* Features */}
-            <div ref={featuresRef} className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-sm">
+            <div ref={featuresRef} className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-sm px-2 sm:px-0">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
                 <span className={theme === 'light' ? 'text-slate-700' : 'text-slate-300'}>Design to Deployment</span>
@@ -1018,34 +1020,34 @@ export default function HomepageV2() {
             {/* Buttons */}
             <div
               ref={buttonsRef}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-4 pt-8"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 sm:gap-4 pt-6 sm:pt-8 px-2 sm:px-0"
             >
-              <Link href="/start-project">
+              <Link href="/start-project" className="w-full sm:w-auto">
                 <Button
                   size="lg" 
-                  className="group relative overflow-hidden bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-5 px-10 text-base shadow-2xl shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300 ease-in-out transform hover:scale-[1.03] hover:-translate-y-0.5 border-0 rounded-xl"
+                  className="w-full sm:w-auto group relative overflow-hidden bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-4 sm:py-5 px-8 sm:px-10 text-base shadow-2xl shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300 ease-in-out transform hover:scale-[1.03] hover:-translate-y-0.5 border-0 rounded-xl"
                 >
                   <span className="absolute inset-0 bg-gradient-to-r from-orange-400 to-transparent opacity-0 group-hover:opacity-30 transition-opacity duration-300"></span>
-                  <span className="flex items-center relative z-10 gap-2">
+                  <span className="flex items-center justify-center relative z-10 gap-2">
                     <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                    Get Your Website Built
+                    <span className="text-sm sm:text-base">Get Your Website Built</span>
                     <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
                   </span>
                 </Button>
               </Link>
-              <Link href="/portfolio">
+              <Link href="/portfolio" className="w-full sm:w-auto">
                 <Button
                   size="lg"
                   variant="outline"
-                  className={`group relative font-semibold py-5 px-10 text-base shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.03] hover:-translate-y-0.5 rounded-xl border-2 ${
+                  className={`w-full sm:w-auto group relative font-semibold py-4 sm:py-5 px-8 sm:px-10 text-base shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.03] hover:-translate-y-0.5 rounded-xl border-2 ${
                     theme === 'light'
                       ? 'text-slate-700 border-slate-300 hover:border-orange-500 hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-100 hover:text-orange-700 shadow-slate-200/40 hover:shadow-orange-500/30'
                       : 'text-slate-300 border-slate-600 hover:border-orange-500 hover:bg-gradient-to-r hover:from-orange-950/30 hover:to-orange-900/30 hover:text-orange-400 shadow-black/20 hover:shadow-orange-500/30'
                   }`}
                 >
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center justify-center gap-2">
                     <Briefcase className="w-5 h-5 transition-all duration-300 group-hover:scale-110" />
-                    View Our Work
+                    <span className="text-sm sm:text-base">View Our Work</span>
                     <span className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">→</span>
                   </span>
                 </Button>
@@ -1053,7 +1055,7 @@ export default function HomepageV2() {
             </div>
 
             {/* Scroll Indicator */}
-            <div className="pt-8 md:pt-12">
+            <div className="pt-6 sm:pt-8 md:pt-12">
               <div className={`flex flex-col items-center gap-2 ${
                 theme === 'light' ? 'text-slate-400' : 'text-slate-500'
               }`}>
@@ -1072,7 +1074,8 @@ export default function HomepageV2() {
             theme === 'light' ? 'text-slate-900' : 'text-slate-100'
           }`}
         >
-          <div className="container mx-auto max-w-7xl relative z-10">
+          {/* Desktop Layout */}
+          <div className="container mx-auto max-w-7xl relative z-10 hidden xl:block">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
               {/* Left Content */}
               <div className="lg:col-span-7 space-y-8 about-text">
@@ -1283,6 +1286,208 @@ export default function HomepageV2() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Mobile Layout - Completely Different Design */}
+          <div className="container mx-auto max-w-lg relative z-10 xl:hidden px-4 py-8">
+            
+            {/* Mobile Title Section - First */}
+            <div className="text-center mb-12">
+              <h1 className="text-4xl sm:text-5xl font-bold leading-tight mb-6">
+                <SparklesText 
+                  className="block mb-3"
+                  colors={{ first: "#F97316", second: "#EA580C" }}
+                >
+                  Meet Our
+                </SparklesText>
+                <AuroraText 
+                  className="block"
+                  colors={["#FDE047", "#FDBA74", "#F97316", "#EA580C"]}
+                >
+                  Developer
+                </AuroraText>
+              </h1>
+              
+              {/* Dynamic Role - Mobile */}
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <div className="w-1 h-12 bg-gradient-to-b from-orange-500 to-orange-600 rounded-full flex-shrink-0" />
+                <div className="text-xl sm:text-2xl font-light min-h-[2rem]">
+                  <WordRotate
+                    words={[
+                      <span key="dev" className="text-orange-500 font-semibold">Creative Developer</span>,
+                      <span key="designer" className="text-orange-500 font-semibold">Design Engineer</span>,
+                      <span key="architect" className="text-orange-500 font-semibold">Solution Architect</span>,
+                      <span key="craftsman" className="text-orange-500 font-semibold">Digital Craftsman</span>
+                    ]}
+                    duration={3500}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Stats Row - Horizontal Layout */}
+            <div className={`rounded-3xl p-6 mb-8 shadow-xl backdrop-blur-sm border ${
+              theme === 'light' 
+                ? 'bg-gradient-to-r from-orange-50 to-white border-orange-200/30' 
+                : 'bg-gradient-to-r from-orange-950/30 to-neutral-900/80 border-orange-500/20'
+            }`}>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center">
+                  <div className="text-3xl sm:text-4xl font-bold text-orange-500 mb-1">5+</div>
+                  <div className={`text-xs sm:text-sm uppercase tracking-wider leading-tight ${
+                    theme === 'light' ? 'text-slate-600' : 'text-gray-400'
+                  }`}>Years Experience</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl sm:text-4xl font-bold text-orange-500 mb-1">50+</div>
+                  <div className={`text-xs sm:text-sm uppercase tracking-wider leading-tight ${
+                    theme === 'light' ? 'text-slate-600' : 'text-gray-400'
+                  }`}>Projects Delivered</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl sm:text-4xl font-bold text-orange-500 mb-1">100%</div>
+                  <div className={`text-xs sm:text-sm uppercase tracking-wider leading-tight ${
+                    theme === 'light' ? 'text-slate-600' : 'text-gray-400'
+                  }`}>Client Satisfaction</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Profile Card - Moved to Middle */}
+            <div className="relative mb-8">
+              <div className="relative profile-card-container max-w-sm mx-auto">
+                {/* Mobile Glow Effect */}
+                <div 
+                  className="absolute inset-0 rounded-[32px] profile-glow-1"
+                  style={{
+                    background: 'radial-gradient(circle, rgba(249, 115, 22, 0.3) 0%, rgba(251, 146, 60, 0.15) 30%, transparent 60%)',
+                    filter: 'blur(40px)',
+                    transform: 'scale(1.2)',
+                    animation: 'pulseGlow 6s infinite ease-in-out',
+                  }}
+                />
+
+                {/* Mobile Profile Card */}
+                <div className="relative profile-card-main">
+                  <div className="relative rounded-[32px] overflow-hidden shadow-2xl">
+                    <div className="relative h-[400px] sm:h-[450px] overflow-hidden rounded-[32px]">
+                      <img 
+                        src="/about-us-profile.jpeg" 
+                        alt="Andreas Kyriakou - Full-Stack Developer & Designer"
+                        className="w-full h-full object-cover rounded-[32px]"
+                      />
+                      
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent rounded-[32px]" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-orange-600/10 rounded-[32px]" />
+                    </div>
+                    
+                    {/* Mobile Card Content */}
+                    <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
+                      {/* Status Badges */}
+                      <div className="flex justify-center gap-2 mb-4">
+                        <Badge className="bg-green-500 text-white border-0 px-3 py-1.5 text-sm">
+                          <div className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse" />
+                          Available
+                        </Badge>
+                        <Badge className="bg-blue-500 text-white border-0 px-3 py-1.5 text-sm">
+                          <Globe className="w-3 h-3 mr-2" />
+                          Remote
+                        </Badge>
+                      </div>
+                      
+                      {/* Name and Title - Centered */}
+                      <div className="text-center mb-4">
+                        <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">Andreas Kyriakou</h3>
+                        <p className="text-orange-400 font-medium text-base sm:text-lg">Full-Stack Developer & UI/UX Designer</p>
+                      </div>
+                      
+                      {/* Tech Stack - Centered */}
+                      <div className="flex flex-wrap justify-center gap-2 mb-4">
+                        {['React', 'Next.js', 'TypeScript', 'Figma'].map((tech) => (
+                          <Badge 
+                            key={tech} 
+                            variant="secondary" 
+                            className="bg-white/10 text-white border-orange-500/30 backdrop-blur-sm text-sm px-3 py-1"
+                          >
+                            {tech}
+                          </Badge>
+                        ))}
+                      </div>
+                      
+                      {/* Social Icons - Centered */}
+                      <div className="flex justify-center gap-3">
+                        {[Github, Linkedin, Twitter].map((Icon, index) => (
+                          <Button 
+                            key={index}
+                            variant="ghost" 
+                            size="icon"
+                            className="text-white/70 hover:text-orange-500 hover:bg-white/10 w-10 h-10"
+                          >
+                            <Icon className="w-5 h-5" />
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Description Section */}
+            <div className={`rounded-3xl p-6 mb-8 shadow-xl backdrop-blur-sm border ${
+              theme === 'light' 
+                ? 'bg-white/80 border-orange-200/30' 
+                : 'bg-neutral-900/80 border-orange-500/20'
+            }`}>
+              <div className="space-y-4 text-center">
+                <p className={`text-lg sm:text-xl leading-relaxed font-light ${
+                  theme === 'light' ? 'text-slate-900' : 'text-white'
+                }`}>
+                  A rare combination of <span className="text-orange-500 font-medium">design intuition</span> and <span className="text-orange-500 font-medium">technical expertise</span>.
+                </p>
+                <p className={`text-base sm:text-lg leading-relaxed ${
+                  theme === 'light' ? 'text-slate-600' : 'text-gray-300'
+                }`}>
+                  I create digital experiences that don't just work—they inspire, engage, and deliver exceptional results for businesses and users alike.
+                </p>
+              </div>
+            </div>
+
+            {/* Mobile Location & CTA Section - Last */}
+            <div className={`rounded-3xl p-6 shadow-xl backdrop-blur-sm border ${
+              theme === 'light' 
+                ? 'bg-white/80 border-orange-200/30' 
+                : 'bg-neutral-900/80 border-orange-500/20'
+            }`}>
+              {/* Location & Availability */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
+                <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${
+                  theme === 'light' 
+                    ? 'bg-orange-50 text-slate-700' 
+                    : 'bg-neutral-800/50 text-gray-300'
+                }`}>
+                  <MapPin className="w-4 h-4 text-orange-500" />
+                  <span className="font-medium">Nicosia, Cyprus</span>
+                </div>
+                <div className="flex items-center gap-2 bg-green-500/20 px-4 py-2 rounded-full">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  <span className="text-green-400 font-medium">Available for Remote Work</span>
+                </div>
+              </div>
+              
+              {/* CTA Button */}
+              <Button 
+                variant="outline" 
+                className={`w-full border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white px-8 py-4 text-lg font-semibold rounded-2xl transition-all duration-300 ${
+                  theme === 'light' 
+                    ? 'bg-white hover:bg-orange-500' 
+                    : 'bg-neutral-800/50 hover:bg-orange-500'
+                }`}
+              >
+                <Download className="w-5 h-5 mr-3" />
+                View Portfolio
+              </Button>
             </div>
           </div>
         </section>
