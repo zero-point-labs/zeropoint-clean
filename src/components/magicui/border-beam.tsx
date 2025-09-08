@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion, MotionStyle, Transition } from "motion/react";
+import { motion, Transition } from "framer-motion";
 
 interface BorderBeamProps {
   /**
@@ -73,7 +73,7 @@ export const BorderBeam = ({
             "--color-from": colorFrom,
             "--color-to": colorTo,
             ...style,
-          } as MotionStyle
+          } as React.CSSProperties
         }
         initial={{ offsetDistance: `${initialOffset}%` }}
         animate={{

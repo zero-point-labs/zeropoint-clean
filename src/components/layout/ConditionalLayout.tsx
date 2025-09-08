@@ -9,9 +9,15 @@ export default function ConditionalLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  
+  // Pages that should not have the default header (they have their own navigation)
+  const pagesWithoutHeader = ['/', '/homepagev2'];
+  const showHeader = !pagesWithoutHeader.includes(pathname);
+
   return (
     <>
-      <Header />
+      {showHeader && <Header />}
       <main className="flex-grow">
         {children}
       </main>

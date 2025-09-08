@@ -1,6 +1,185 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Floating Profile Card Animations */
+@keyframes pulseGlow {
+  0%, 100% { 
+    opacity: 0.4; 
+    transform: scale(1.3); 
+  }
+  50% { 
+    opacity: 0.7; 
+    transform: scale(1.5); 
+  }
+}
+
+@keyframes floatCard {
+  0%, 100% { 
+    transform: translateY(0px) translateX(0px) rotateX(0deg) rotateY(0deg); 
+  }
+  20% { 
+    transform: translateY(-15px) translateX(5px) rotateX(1deg) rotateY(-1deg); 
+  }
+  40% { 
+    transform: translateY(-25px) translateX(-3px) rotateX(-1deg) rotateY(1deg); 
+  }
+  60% { 
+    transform: translateY(-20px) translateX(8px) rotateX(2deg) rotateY(0deg); 
+  }
+  80% { 
+    transform: translateY(-10px) translateX(-2px) rotateX(0deg) rotateY(-1deg); 
+  }
+}
+
+@keyframes subtleFloat {
+  0%, 100% { 
+    transform: translateY(0px) translateX(0px); 
+  }
+  33% { 
+    transform: translateY(-8px) translateX(3px); 
+  }
+  66% { 
+    transform: translateY(-12px) translateX(-4px); 
+  }
+}
+
+@keyframes imageFloat {
+  0%, 100% { 
+    transform: translate(-1%, -1%) translateY(0px) rotate(0deg) scale(1.02); 
+  }
+  50% { 
+    transform: translate(-1%, -1%) translateY(-2px) rotate(0deg) scale(1.02); 
+  }
+}
+
+@keyframes shadowFloat {
+  0%, 100% { 
+    transform: translateY(20px) translateX(0px) translateZ(-10px) scale(0.95); 
+  }
+  20% { 
+    transform: translateY(35px) translateX(-2px) translateZ(-10px) scale(0.92); 
+  }
+  40% { 
+    transform: translateY(45px) translateX(1px) translateZ(-10px) scale(0.88); 
+  }
+  60% { 
+    transform: translateY(40px) translateX(-3px) translateZ(-10px) scale(0.90); 
+  }
+  80% { 
+    transform: translateY(30px) translateX(1px) translateZ(-10px) scale(0.93); 
+  }
+}
+
+@keyframes orbitCard1 {
+  0% { 
+    transform: rotate(0deg) translateX(200px) rotate(0deg); 
+  }
+  100% { 
+    transform: rotate(360deg) translateX(200px) rotate(-360deg); 
+  }
+}
+
+@keyframes orbitCard2 {
+  0% { 
+    transform: rotate(0deg) translateX(150px) rotate(0deg); 
+  }
+  100% { 
+    transform: rotate(-360deg) translateX(150px) rotate(360deg); 
+  }
+}
+
+@keyframes orbitCard3 {
+  0% { 
+    transform: rotate(0deg) translateX(120px) rotate(0deg); 
+  }
+  100% { 
+    transform: rotate(360deg) translateX(120px) rotate(-360deg); 
+  }
+}
+
+@keyframes floatParticle1 {
+  0%, 100% { 
+    transform: translateY(0px) translateX(0px) rotate(0deg); 
+    opacity: 0.6; 
+  }
+  25% { 
+    transform: translateY(-15px) translateX(8px) rotate(90deg); 
+    opacity: 0.8; 
+  }
+  50% { 
+    transform: translateY(-30px) translateX(12px) rotate(180deg); 
+    opacity: 1; 
+  }
+  75% { 
+    transform: translateY(-20px) translateX(-5px) rotate(270deg); 
+    opacity: 0.7; 
+  }
+}
+
+@keyframes floatParticle2 {
+  0%, 100% { 
+    transform: translateY(0px) translateX(0px) rotate(0deg); 
+    opacity: 0.4; 
+  }
+  30% { 
+    transform: translateY(-25px) translateX(-12px) rotate(120deg); 
+    opacity: 0.9; 
+  }
+  60% { 
+    transform: translateY(-35px) translateX(-8px) rotate(240deg); 
+    opacity: 0.8; 
+  }
+}
+
+@keyframes floatParticle3 {
+  0%, 100% { 
+    transform: translateY(0px) translateX(0px) rotate(0deg); 
+    opacity: 0.5; 
+  }
+  40% { 
+    transform: translateY(-20px) translateX(15px) rotate(144deg); 
+    opacity: 0.9; 
+  }
+  80% { 
+    transform: translateY(-40px) translateX(8px) rotate(288deg); 
+    opacity: 0.6; 
+  }
+}
+
+@keyframes rotateRays {
+  0% { 
+    transform: rotate(0deg); 
+  }
+  100% { 
+    transform: rotate(360deg); 
+  }
+}
+
+/* Profile Card Corner Fix */
+.profile-card-container {
+  isolation: isolate;
+}
+
+.profile-card-main {
+  border-radius: 32px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.hero-image {
+  border-radius: 32px !important;
+  overflow: hidden !important;
+}
+
+.profile-image-container {
+  border-radius: 32px !important;
+  overflow: hidden !important;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
