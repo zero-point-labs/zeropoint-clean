@@ -123,422 +123,197 @@ const TypeWriter = ({ text, delay = 0, speed = 0.03 }: { text: string; delay?: n
 
  
 
-// Modern Minimal Tech Profile Card
-const ModernProfileCard = ({ profileImage }: { profileImage?: string }) => {
+// Holographic Card with Glitch Effect
+const HolographicCard = ({ profileImage }: { profileImage?: string }) => {
+  const [isGlitching, setIsGlitching] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [activeLink, setActiveLink] = useState<number | null>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const cardRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    setMousePosition({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsGlitching(true);
+      setTimeout(() => setIsGlitching(false), 300);
+    }, 5000 + Math.random() * 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const socialLinks = [
-    { icon: Github, href: "#", label: "GitHub", color: "hover:text-white" },
-    { icon: Linkedin, href: "#", label: "LinkedIn", color: "hover:text-blue-400" },
-    { icon: Twitter, href: "#", label: "Twitter", color: "hover:text-sky-400" },
-  ];
-
-  const statusItems = [
-    { label: "Available", color: "bg-green-500" },
-    { label: "Remote", color: "bg-blue-500" },
+    { icon: Github, href: "#", label: "GitHub" },
+    { icon: Linkedin, href: "#", label: "LinkedIn" },
+    { icon: Twitter, href: "#", label: "Twitter" },
   ];
 
   return (
     <motion.div
-      className="relative w-full max-w-md mx-auto"
+      className="relative w-full"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.8, delay: 0.5 }}
     >
-      {/* Main Card */}
-      <div 
-        ref={cardRef}
-        onMouseMove={handleMouseMove}
-        className={`relative overflow-hidden rounded-3xl ${
+      <Card className={`relative overflow-hidden backdrop-blur-xl border-2 h-[750px] md:h-[850px] ${
         theme === 'light' 
-            ? 'bg-white shadow-2xl' 
-            : 'bg-neutral-900'
-        }`}
-        style={{
-          '--mouse-x': `${mousePosition.x}px`,
-          '--mouse-y': `${mousePosition.y}px`
-        } as React.CSSProperties}>
+          ? 'bg-white/70 border-orange-200/50' 
+          : 'bg-neutral-900/70 border-orange-500/30'
+      }`}>
+        <BorderBeam
+          size={350}
+          duration={isHovered ? 8 : 12}
+          colorFrom="#F97316"
+          colorTo="#EA580C"
+        />
         
-        {/* Subtle gradient border */}
-        <div className="absolute inset-0 p-[1px] rounded-3xl bg-gradient-to-br from-orange-500/50 via-transparent to-orange-600/50">
-          <div className={`w-full h-full rounded-3xl ${
-            theme === 'light' ? 'bg-white' : 'bg-neutral-900'
-          }`} />
+        {/* Holographic shimmer overlay */}
+        <div className="absolute inset-0 opacity-30 pointer-events-none">
+          <div className={`absolute inset-0 bg-gradient-to-br ${
+            theme === 'light'
+              ? 'from-orange-300/20 via-purple-300/20 to-blue-300/20'
+              : 'from-orange-500/20 via-purple-500/20 to-blue-500/20'
+          } animate-gradient`} />
         </div>
 
-        {/* Content Container */}
-        <div className="relative z-10">
-          {/* Profile Image Section */}
-          <div className="relative h-[400px] overflow-hidden group">
-            {/* Main Image Container */}
+        {/* Profile Image Section (65% height) */}
+        <div className="relative h-[60%] p-6">
           <motion.div
-              className="absolute inset-0"
-              animate={{ scale: isHovered ? 1.05 : 1 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            >
-              {/* Base Image with Filters */}
-              <img 
-                src={profileImage || "/about-us-profile.jpeg"} 
-                alt="Andreas Kyriakou" 
-                className={`w-full h-full object-cover transition-all duration-700 ${
-                  isHovered 
-                    ? 'contrast-110 brightness-105' 
-                    : 'contrast-100 brightness-100'
-                }`}
-                style={{
-                  filter: isHovered 
-                    ? 'saturate(0.9) hue-rotate(-5deg)' 
-                    : 'saturate(0.85)'
-                }}
+            className="relative w-full h-full"
+            variants={glitchVariants}
+            animate={isGlitching ? "glitch" : "idle"}
+          >
+            {/* Profile image container */}
+            <div className="relative w-full h-full rounded-2xl overflow-hidden border-2 border-orange-500/50">
+              {profileImage ? (
+                <img 
+                  src={profileImage} 
+                  alt="Profile" 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className={`w-full h-full flex items-center justify-center ${
+                  theme === 'light' ? 'bg-slate-200' : 'bg-slate-800'
+                }`}>
+                  <Users className="w-24 h-24 text-slate-400" />
+                </div>
+              )}
+
+              {/* Scan line effect (clipped inside) */}
+              <motion.div
+                className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-orange-500/15 to-transparent"
+                animate={{ y: [-500, 500] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
               />
-              
-              {/* Duotone Effect Layer */}
-              <div 
-                className="absolute inset-0 mix-blend-multiply transition-opacity duration-700"
-                style={{
-                  background: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)',
-                  opacity: isHovered ? 0.15 : 0.25
-                }}
-              />
-              
-              {/* Contrast Enhancement Layer */}
-              <div className="absolute inset-0 mix-blend-overlay">
-                <div className="w-full h-full bg-gradient-to-br from-white/20 to-black/20" />
+
+              {/* RGB separation effect on hover */}
+              {isHovered && (
+                <>
+                  <div className="absolute inset-0 mix-blend-screen opacity-60">
+                    <div className="absolute inset-0 bg-red-500 transform translate-x-1" />
+                  </div>
+                  <div className="absolute inset-0 mix-blend-screen opacity-60">
+                    <div className="absolute inset-0 bg-blue-500 transform -translate-x-1" />
+                  </div>
+                </>
+              )}
             </div>
 
-              {/* Dynamic Mesh Gradient Overlay */}
-              <motion.div 
-                className="absolute inset-0 opacity-30"
-                animate={{
-                  background: [
-                    'radial-gradient(circle at 20% 50%, rgba(249, 115, 22, 0.4) 0%, transparent 50%)',
-                    'radial-gradient(circle at 80% 50%, rgba(249, 115, 22, 0.4) 0%, transparent 50%)',
-                    'radial-gradient(circle at 20% 50%, rgba(249, 115, 22, 0.4) 0%, transparent 50%)',
-                  ]
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-
-              {/* Gradient overlay for text readability */}
-              <div className={`absolute inset-0 bg-gradient-to-t ${
-                theme === 'light'
-                  ? 'from-white via-transparent to-transparent'
-                  : 'from-neutral-900 via-transparent to-transparent'
-              }`} />
-            </motion.div>
-
-            {/* Animated Scan Lines */}
+            {/* Floating data points */}
             <motion.div
-              className="absolute inset-0 pointer-events-none"
+              className="absolute -top-2 -right-2"
               animate={{
-                backgroundPosition: isHovered ? '0 -10px' : '0 0' 
+                y: [0, -5, 0],
+                rotate: [0, 10, 0],
               }}
               transition={{
-                duration: 0.3,
-                ease: "linear"
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
               }}
-              style={{
-                backgroundImage: `repeating-linear-gradient(
-                  0deg,
-                  transparent,
-                  transparent 2px,
-                  rgba(249, 115, 22, 0.03) 2px,
-                  rgba(249, 115, 22, 0.03) 4px
-                )`,
-                backgroundSize: '100% 4px'
-              }}
-            />
-
-            {/* RGB Split Effect on Hover */}
-            {isHovered && (
-              <>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute inset-0 pointer-events-none"
-                >
-                  <div className="absolute inset-0" 
-                    style={{
-                      background: 'linear-gradient(90deg, rgba(255,0,0,0.1) 0%, transparent 50%, rgba(0,0,255,0.1) 100%)',
-                      mixBlendMode: 'screen',
-                      transform: 'translateX(-2px)'
-                    }}
-                  />
-                </motion.div>
-              </>
-            )}
-
-            {/* Geometric Pattern Overlay */}
-            <div className="absolute inset-0 opacity-20 pointer-events-none">
-              <svg className="w-full h-full" preserveAspectRatio="none">
-                <defs>
-                  <pattern id="tech-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                    <circle cx="20" cy="20" r="1" fill="rgba(249, 115, 22, 0.3)" />
-                    <path d="M0 20 L20 0 L40 20 L20 40 Z" fill="none" stroke="rgba(249, 115, 22, 0.1)" strokeWidth="0.5" />
-                  </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#tech-pattern)" />
-              </svg>
-            </div>
-
-            {/* Noise Texture */}
-            <div 
-              className="absolute inset-0 opacity-30 mix-blend-overlay pointer-events-none"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence baseFrequency='0.9' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.02' /%3E%3C/svg%3E")`,
-              }}
-            />
-
-            {/* Status badges */}
-            <div className="absolute top-6 right-6 flex flex-col gap-2 z-10">
-              {statusItems.map((status, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.8 + index * 0.1 }}
-                  className={`px-3 py-1.5 rounded-full backdrop-blur-md flex items-center gap-2 ${
-                    theme === 'light'
-                      ? 'bg-white/90 shadow-lg'
-                      : 'bg-black/50'
-                  }`}
-                >
-                  <div className={`w-2 h-2 rounded-full ${status.color} animate-pulse`} />
-                  <span className={`text-xs font-medium ${
-                    theme === 'light' ? 'text-slate-700' : 'text-white'
-                  }`}>{status.label}</span>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Corner Accent */}
-            <motion.div
-              className="absolute top-0 left-0 w-20 h-20"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: isHovered ? 1 : 0.5 }}
-              transition={{ duration: 0.3 }}
             >
-              <svg className="w-full h-full" viewBox="0 0 80 80">
-                <path 
-                  d="M0 0 L80 0 L0 80 Z" 
-                  fill="none" 
-                  stroke="rgba(249, 115, 22, 0.3)" 
-                  strokeWidth="1"
-                />
-                <path 
-                  d="M0 20 L20 0" 
-                  fill="none" 
-                  stroke="rgba(249, 115, 22, 0.5)" 
-                  strokeWidth="2"
-                />
-              </svg>
+              <Badge className="bg-green-500 text-white border-0">
+                <span className="animate-pulse">● ONLINE</span>
+              </Badge>
+            </motion.div>
           </motion.div>
         </div>
 
-          {/* Info Section */}
-          <div className="relative px-8 pt-6 pb-8">
-            {/* Name and Title */}
+        {/* Info Section (40% height) */}
+        <CardContent className="p-8 pt-4 pb-6 h-[40%] relative z-10">
+          <div className="h-full flex flex-col justify-between">
+            {/* Name, Role, and Location */}
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="mb-6"
+              className="space-y-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
             >
-              <h3 className={`text-3xl font-bold tracking-tight mb-2 ${
+              <div className="text-left space-y-3">
+                <div className="space-y-2">
+                  <h3 className={`text-4xl xl:text-5xl font-extrabold tracking-tight leading-none ${
                     theme === 'light' ? 'text-slate-900' : 'text-white'
                   }`}>
-                Andreas Kyriakou
+                    <TypeWriter text="Andreas Kyriakou" delay={1} />
                   </h3>
-              
-              <div className="flex items-center gap-3 mb-4">
-                <p className="text-orange-500 font-semibold">
-                  Full-Stack Developer
+                  <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full" />
+                </div>
+                
+                <p className="text-orange-500 font-bold text-sm tracking-wide">
+                  <TypeWriter text="Full-Stack Developer & Designer" delay={1.3} speed={0.02} />
                 </p>
-                <span className={`${theme === 'light' ? 'text-slate-300' : 'text-neutral-600'}`}>•</span>
-                <p className={`${theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>
-                  UI/UX Designer
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2 text-sm">
-                <MapPin className="w-4 h-4 text-orange-500/70" />
-                <span className={theme === 'light' ? 'text-slate-600' : 'text-slate-400'}>
-                  Nicosia, Cyprus
+                
+                <div className="flex items-center justify-start gap-3 pt-1">
+                  <MapPin className="w-5 h-5 text-orange-500" />
+                  <span className={`text-lg font-medium ${
+                    theme === 'light' ? 'text-slate-600' : 'text-slate-400'
+                  }`}>
+                    <TypeWriter text="Nicosia, Cyprus" delay={1.6} speed={0.02} />
                   </span>
+                </div>
               </div>
             </motion.div>
 
-            {/* Tech Stack Pills */}
+            {/* Social Links */}
             <motion.div 
+              className="flex justify-start gap-4 py-3"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.7 }}
-              className="flex flex-wrap gap-2 mb-6"
+              transition={{ delay: 1.1 }}
             >
-              {['React', 'Next.js', 'TypeScript', 'Node.js'].map((tech, index) => (
-                <motion.span
-                  key={tech}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.8 + index * 0.05 }}
-                  className={`px-3 py-1 text-xs font-medium rounded-full border ${
+              {socialLinks.map((social, index) => (
+                <motion.a
+                  key={index}
+                  href={social.href}
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 1.3 + index * 0.1 }}
+                  whileHover={{ y: -3, scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`p-3 rounded-lg border transition-all shadow-md hover:shadow-lg relative z-20 ${
                     theme === 'light'
-                      ? 'bg-slate-50 border-slate-200 text-slate-700'
-                      : 'bg-neutral-800 border-neutral-700 text-slate-300'
+                      ? 'bg-white/90 border-slate-200/60 hover:border-orange-500/50 hover:bg-orange-50'
+                      : 'bg-neutral-800/70 border-neutral-700/60 hover:border-orange-500/50 hover:bg-orange-950/40'
                   }`}
                 >
-                  {tech}
-                </motion.span>
+                  <social.icon className="w-6 h-6 text-orange-500" />
+                </motion.a>
               ))}
             </motion.div>
 
-            {/* Separator */}
-            <div className={`h-px mb-6 ${
-              theme === 'light' ? 'bg-slate-200' : 'bg-neutral-800'
-            }`} />
-
-            {/* Social Links - Minimal Style */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex gap-1">
-                {socialLinks.map((social, index) => (
-                  <motion.a
-                    key={index}
-                    href={social.href}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.9 + index * 0.05 }}
-                    onMouseEnter={() => setActiveLink(index)}
-                    onMouseLeave={() => setActiveLink(null)}
-                    className={`p-3 rounded-xl transition-all duration-300 ${
-                      theme === 'light'
-                        ? 'hover:bg-slate-100'
-                        : 'hover:bg-neutral-800'
-                    }`}
-                  >
-                    <social.icon className={`w-5 h-5 transition-colors duration-300 ${
-                      activeLink === index 
-                        ? social.color 
-                        : theme === 'light' ? 'text-slate-600' : 'text-slate-400'
-                    }`} />
-                  </motion.a>
-                ))}
-              </div>
-
-              {/* Experience Badge */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 }}
-                className={`px-4 py-2 rounded-full text-xs font-medium ${
-                  theme === 'light'
-                    ? 'bg-orange-50 text-orange-600'
-                    : 'bg-orange-950/50 text-orange-400'
-                }`}
-              >
-                5+ Years Experience
-              </motion.div>
-            </div>
-
-            {/* CTA Buttons */}
+            {/* Contact Button */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.1 }}
-              className="flex gap-3"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 1.6, type: "spring", stiffness: 200 }}
             >
-              <Button 
-                className="flex-1 group relative overflow-hidden bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0"
-              >
-                <span className="relative z-10 flex items-center justify-center">
+              <Button className="w-full group bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-3 text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300">
                 <MessageCircle className="w-4 h-4 mr-2" />
-                  Let's Talk
-                </span>
-                <motion.div
-                  className="absolute inset-0 bg-white"
-                  initial={{ x: "-100%" }}
-                  whileHover={{ x: "100%" }}
-                  transition={{ duration: 0.3 }}
-                  style={{ opacity: 0.2 }}
-                />
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                className={`group ${
-                  theme === 'light'
-                    ? 'border-slate-200 hover:bg-slate-50'
-                    : 'border-neutral-700 hover:bg-neutral-800'
-                }`}
-              >
-                <span className="flex items-center">
-                  CV
-                  <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
-                </span>
+                Let's Connect
+                <ArrowRight className="w-4 h-4 ml-auto transition-transform group-hover:translate-x-1" />
               </Button>
             </motion.div>
           </div>
-        </div>
-
-        {/* Interactive hover effect */}
-        <motion.div
-          className="absolute inset-0 pointer-events-none"
-          animate={{
-            background: isHovered
-              ? "radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249, 115, 22, 0.1), transparent 40%)"
-              : "radial-gradient(600px circle at 50% 50%, transparent, transparent 40%)"
-          }}
-          transition={{ duration: 0.3 }}
-        />
-      </div>
-
-      {/* Floating accent elements */}
-      <motion.div
-        className="absolute -z-10 top-10 -right-10 w-32 h-32 rounded-full bg-orange-500/10 blur-3xl"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      
-      <motion.div
-        className="absolute -z-10 bottom-10 -left-10 w-40 h-40 rounded-full bg-orange-600/10 blur-3xl"
-        animate={{
-          scale: [1, 1.3, 1],
-          opacity: [0.2, 0.4, 0.2],
-        }}
-        transition={{
-          duration: 5,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 1,
-        }}
-      />
+        </CardContent>
+      </Card>
     </motion.div>
   );
 };
@@ -700,7 +475,7 @@ export default function AboutSection() {
           {/* Right Panel (40% on desktop) */}
           <div className="lg:col-span-2">
             <div className="sticky top-8">
-              <ModernProfileCard profileImage="/about-us-profile.jpeg" />
+              <HolographicCard />
             </div>
           </div>
         </div>
