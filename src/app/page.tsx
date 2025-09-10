@@ -1321,38 +1321,38 @@ export default function Home() {
             
             {/* CTA Title */}
             <div className="cta-title text-center mb-16 sm:mb-20 md:mb-24 px-2 sm:px-4 md:px-0">
-              <div className="reveal-on-scroll mb-12">
+              <div className="reveal-on-scroll mb-8 sm:mb-10 md:mb-12">
                 <Badge
                   variant="outline"
-                  className={`border-orange-500/70 text-orange-400 px-8 py-4 text-base font-semibold rounded-full shadow-lg ${
+                  className={`border-orange-500/70 text-orange-400 px-3 sm:px-4 md:px-6 py-2 sm:py-3 md:py-4 text-xs sm:text-sm md:text-base font-semibold rounded-full shadow-lg max-w-fit mx-auto ${
                     theme === 'light' 
                       ? 'bg-orange-50/80 shadow-orange-200/60' 
                       : 'bg-orange-950/60 shadow-orange-900/60'
                   }`}
                 >
-                  <AnimatedShinyText className="text-orange-400">
-                    Ready to Transform Your Business? ✨
+                  <AnimatedShinyText className="text-orange-400 whitespace-nowrap">
+                    Ready to Transform? ✨
                   </AnimatedShinyText>
                 </Badge>
               </div>
               
-              <h2 className="reveal-on-scroll text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-8 md:mb-12 leading-[1.1] px-4 sm:px-2 md:px-0 max-w-full overflow-hidden hyphens-auto">
+              <h2 className="reveal-on-scroll text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-6 sm:mb-8 md:mb-12 leading-tight px-2 sm:px-1 md:px-0 max-w-full overflow-hidden">
                 <SparklesText 
                   colors={{ first: "#F97316", second: "#EA580C" }}
                   sparklesCount={15}
-                  className="block mb-1 sm:mb-2 md:mb-4 break-words leading-none"
+                  className="block mb-0 sm:mb-1 md:mb-2 break-words leading-tight"
                 >
                   Let's Build Something
                 </SparklesText>
                 <AuroraText 
-                  className="block break-words leading-none"
+                  className="block break-words leading-tight"
                   colors={["#FDE047", "#FDBA74", "#F97316", "#EA580C"]}
                 >
                   Extraordinary
                 </AuroraText>
               </h2>
               
-              <p className={`reveal-on-scroll text-base md:text-xl lg:text-2xl max-w-4xl mx-auto leading-relaxed px-4 md:px-0 ${
+              <p className={`reveal-on-scroll text-sm sm:text-base md:text-lg lg:text-xl max-w-4xl mx-auto leading-relaxed px-4 md:px-0 ${
                 theme === 'light' ? 'text-slate-600' : 'text-gray-300'
               }`}>
                 Join 50+ successful businesses who trusted Zero Point Labs to bring their vision to life. 
