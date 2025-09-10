@@ -1315,36 +1315,25 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Contact Form Card */}
-            <div className="flex justify-center mb-20">
-              <div className="w-full max-w-3xl px-4 md:px-0">
+            {/* Contact Form Card - Mobile Optimized */}
+            <div className="flex justify-center mb-12 md:mb-20">
+              <div className="w-full max-w-2xl md:max-w-3xl px-4 md:px-0">
                 <div className="cta-hub relative group">
                   
                   {/* Enhanced Background Glow Effects */}
                   <div 
-                    className="absolute inset-0 rounded-3xl opacity-30 pointer-events-none transition-opacity duration-500 group-hover:opacity-40"
+                    className="absolute inset-0 rounded-2xl md:rounded-3xl opacity-30 pointer-events-none transition-opacity duration-500 group-hover:opacity-40"
                     style={{
                       background: theme === 'light' 
                         ? 'radial-gradient(circle at 30% 30%, rgba(249, 115, 22, 0.08) 0%, rgba(251, 146, 60, 0.04) 40%, transparent 70%)'
                         : 'radial-gradient(circle at 30% 30%, rgba(249, 115, 22, 0.15) 0%, rgba(251, 146, 60, 0.08) 40%, transparent 70%)',
-                      filter: 'blur(80px)',
-                      transform: 'scale(1.1)',
-                    }}
-                  />
-                  
-                  {/* Secondary Glow */}
-                  <div 
-                    className="absolute inset-0 rounded-3xl opacity-20 pointer-events-none"
-                    style={{
-                      background: theme === 'light' 
-                        ? 'radial-gradient(circle at 70% 70%, rgba(251, 146, 60, 0.06) 0%, transparent 60%)'
-                        : 'radial-gradient(circle at 70% 70%, rgba(251, 146, 60, 0.12) 0%, transparent 60%)',
                       filter: 'blur(60px)',
+                      transform: 'scale(1.1)',
                     }}
                   />
 
                   {/* Main Card */}
-                  <div className={`relative p-10 md:p-14 rounded-3xl shadow-2xl backdrop-blur-sm border transition-all duration-500 group-hover:shadow-3xl ${
+                  <div className={`relative p-6 md:p-10 lg:p-14 rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl backdrop-blur-sm border transition-all duration-500 group-hover:shadow-3xl ${
                     theme === 'light' 
                       ? 'bg-neutral-50/95 border-neutral-200/60 shadow-neutral-900/15' 
                       : 'bg-neutral-900/95 border-neutral-700/60 shadow-black/60'
@@ -1381,181 +1370,144 @@ export default function Home() {
                     </div>
                     
                     <div className="relative z-10">
-                      {/* Enhanced Header */}
-                      <div className="text-center mb-12">
-                        <div className="relative w-20 h-20 mx-auto mb-8">
-                          {/* Icon Background with Pulse */}
-                          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 shadow-2xl shadow-orange-500/30 animate-pulse" />
-                          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-400 to-orange-500 opacity-75 blur-sm" />
-                          <div className="relative w-full h-full rounded-full bg-gradient-to-r from-orange-500 to-orange-600 flex items-center justify-center">
-                            <Sparkles className="w-10 h-10 text-white animate-pulse" />
-                          </div>
-                        </div>
-                        
-                        <h3 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-                          <SparklesText 
-                            colors={{ first: "#F97316", second: "#EA580C" }}
-                            sparklesCount={8}
-                          >
-                            Let's Start Your Project
-                          </SparklesText>
-                        </h3>
-                        
-                        <p className={`text-xl md:text-2xl font-light leading-relaxed max-w-xl mx-auto ${
-                          theme === 'light' ? 'text-neutral-600' : 'text-neutral-300'
-                        }`}>
-                          Tell us about your vision and we'll get back to you within 24 hours with a detailed proposal
-                        </p>
-                      </div>
+              {/* Enhanced Header - Mobile Optimized */}
+              <div className="text-center mb-8 md:mb-12">
+                <div className="relative w-12 h-12 md:w-20 md:h-20 mx-auto mb-4 md:mb-8">
+                  {/* Icon Background with Pulse */}
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 shadow-xl md:shadow-2xl shadow-orange-500/30 animate-pulse" />
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-400 to-orange-500 opacity-75 blur-sm" />
+                  <div className="relative w-full h-full rounded-full bg-gradient-to-r from-orange-500 to-orange-600 flex items-center justify-center">
+                    <Sparkles className="w-6 h-6 md:w-10 md:h-10 text-white animate-pulse" />
+                  </div>
+                </div>
+                
+                <h3 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-6 leading-tight">
+                  <SparklesText 
+                    colors={{ first: "#F97316", second: "#EA580C" }}
+                    sparklesCount={6}
+                  >
+                    Start Your Project
+                  </SparklesText>
+                </h3>
+                
+                <p className={`text-base md:text-xl lg:text-2xl font-light leading-relaxed max-w-lg mx-auto px-4 ${
+                  theme === 'light' ? 'text-neutral-600' : 'text-neutral-300'
+                }`}>
+                  Get a detailed proposal within 24 hours
+                </p>
+              </div>
 
-                      {/* Enhanced Contact Form */}
-                      <form className="space-y-8">
-                        <div className="grid md:grid-cols-2 gap-6">
+                      {/* Enhanced Contact Form - Mobile Optimized */}
+                      <form className="space-y-4 md:space-y-6">
+                        <div className="grid md:grid-cols-2 gap-3 md:gap-4">
                           <div className="group">
-                            <label className={`block text-sm font-semibold mb-3 transition-colors duration-200 group-focus-within:text-orange-500 ${
+                            <label className={`block text-xs md:text-sm font-medium mb-2 transition-colors duration-200 group-focus-within:text-orange-500 ${
                               theme === 'light' ? 'text-neutral-700' : 'text-neutral-300'
                             }`}>
-                              Your Name
+                              Name
                             </label>
                             <div className="relative">
                               <input
                                 type="text"
-                                className={`w-full px-5 py-4 rounded-2xl border-2 transition-all duration-300 focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 focus:scale-[1.02] ${
+                                className={`w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg md:rounded-xl border transition-all duration-300 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-sm ${
                                   theme === 'light'
                                     ? 'bg-white/80 border-neutral-300 text-neutral-900 placeholder-neutral-500 hover:bg-white focus:bg-white'
                                     : 'bg-neutral-800/60 border-neutral-600 text-white placeholder-neutral-400 hover:bg-neutral-800/80 focus:bg-neutral-800/80'
                                 }`}
-                                placeholder="John Doe"
+                                placeholder="Your name"
                               />
-                              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-500/10 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none group-focus-within:opacity-100" />
                             </div>
                           </div>
                           <div className="group">
-                            <label className={`block text-sm font-semibold mb-3 transition-colors duration-200 group-focus-within:text-orange-500 ${
+                            <label className={`block text-xs md:text-sm font-medium mb-2 transition-colors duration-200 group-focus-within:text-orange-500 ${
                               theme === 'light' ? 'text-neutral-700' : 'text-neutral-300'
                             }`}>
-                              Email Address
+                              Email
                             </label>
                             <div className="relative">
                               <input
                                 type="email"
-                                className={`w-full px-5 py-4 rounded-2xl border-2 transition-all duration-300 focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 focus:scale-[1.02] ${
+                                className={`w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg md:rounded-xl border transition-all duration-300 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-sm ${
                                   theme === 'light'
                                     ? 'bg-white/80 border-neutral-300 text-neutral-900 placeholder-neutral-500 hover:bg-white focus:bg-white'
                                     : 'bg-neutral-800/60 border-neutral-600 text-white placeholder-neutral-400 hover:bg-neutral-800/80 focus:bg-neutral-800/80'
                                 }`}
-                                placeholder="john@company.com"
+                                placeholder="your@email.com"
                               />
-                              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-500/10 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none group-focus-within:opacity-100" />
                             </div>
                           </div>
                         </div>
 
-                        <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-3 md:space-y-4">
                           <div className="group">
-                            <label className={`block text-sm font-semibold mb-3 transition-colors duration-200 group-focus-within:text-orange-500 ${
+                            <label className={`block text-xs md:text-sm font-medium mb-2 transition-colors duration-200 group-focus-within:text-orange-500 ${
                               theme === 'light' ? 'text-neutral-700' : 'text-neutral-300'
                             }`}>
                               Project Type
                             </label>
                             <div className="relative">
                               <select
-                                className={`w-full px-5 py-4 rounded-2xl border-2 transition-all duration-300 focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 focus:scale-[1.02] appearance-none cursor-pointer ${
+                                className={`w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg md:rounded-xl border transition-all duration-300 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 appearance-none cursor-pointer text-sm ${
                                   theme === 'light'
                                     ? 'bg-white/80 border-neutral-300 text-neutral-900 hover:bg-white focus:bg-white'
                                     : 'bg-neutral-800/60 border-neutral-600 text-white hover:bg-neutral-800/80 focus:bg-neutral-800/80'
                                 }`}
                               >
-                                <option value="">Select your project type</option>
-                                <option value="website">Website Design & Development</option>
-                                <option value="webapp">Web Application</option>
-                                <option value="ecommerce">E-commerce Store</option>
-                                <option value="redesign">Website Redesign</option>
+                                <option value="">Select project type</option>
+                                <option value="website">Website</option>
+                                <option value="webapp">Web App</option>
+                                <option value="ecommerce">E-commerce</option>
                                 <option value="other">Other</option>
                               </select>
-                              <ChevronDown className={`absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 pointer-events-none transition-colors ${
+                              <ChevronDown className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 pointer-events-none transition-colors ${
                                 theme === 'light' ? 'text-neutral-500' : 'text-neutral-400'
                               }`} />
-                              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-500/10 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none group-focus-within:opacity-100" />
-                            </div>
-                          </div>
-
-                          <div className="group">
-                            <label className={`block text-sm font-semibold mb-3 transition-colors duration-200 group-focus-within:text-orange-500 ${
-                              theme === 'light' ? 'text-neutral-700' : 'text-neutral-300'
-                            }`}>
-                              Project Budget
-                            </label>
-                            <div className="relative">
-                              <select
-                                className={`w-full px-5 py-4 rounded-2xl border-2 transition-all duration-300 focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 focus:scale-[1.02] appearance-none cursor-pointer ${
-                                  theme === 'light'
-                                    ? 'bg-white/80 border-neutral-300 text-neutral-900 hover:bg-white focus:bg-white'
-                                    : 'bg-neutral-800/60 border-neutral-600 text-white hover:bg-neutral-800/80 focus:bg-neutral-800/80'
-                                }`}
-                              >
-                                <option value="">Select your budget range</option>
-                                <option value="5k-10k">€5,000 - €10,000</option>
-                                <option value="10k-20k">€10,000 - €20,000</option>
-                                <option value="20k-50k">€20,000 - €50,000</option>
-                                <option value="50k+">€50,000+</option>
-                                <option value="discuss">Let's discuss</option>
-                              </select>
-                              <ChevronDown className={`absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 pointer-events-none transition-colors ${
-                                theme === 'light' ? 'text-neutral-500' : 'text-neutral-400'
-                              }`} />
-                              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-500/10 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none group-focus-within:opacity-100" />
                             </div>
                           </div>
                         </div>
 
                         <div className="group">
-                          <label className={`block text-sm font-semibold mb-3 transition-colors duration-200 group-focus-within:text-orange-500 ${
+                          <label className={`block text-xs md:text-sm font-medium mb-2 transition-colors duration-200 group-focus-within:text-orange-500 ${
                             theme === 'light' ? 'text-neutral-700' : 'text-neutral-300'
                           }`}>
-                            Tell us about your project
+                            Project Details
                           </label>
                           <div className="relative">
                             <textarea
-                              rows={5}
-                              className={`w-full px-5 py-4 rounded-2xl border-2 transition-all duration-300 focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 focus:scale-[1.01] resize-none ${
+                              rows={3}
+                              className={`w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg md:rounded-xl border transition-all duration-300 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 resize-none text-sm ${
                                 theme === 'light'
                                   ? 'bg-white/80 border-neutral-300 text-neutral-900 placeholder-neutral-500 hover:bg-white focus:bg-white'
                                   : 'bg-neutral-800/60 border-neutral-600 text-white placeholder-neutral-400 hover:bg-neutral-800/80 focus:bg-neutral-800/80'
                               }`}
-                              placeholder="Describe your vision, goals, and any specific requirements. What problems are you trying to solve? What's your timeline?"
+                              placeholder="Tell us about your project goals and requirements..."
                             />
-                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-500/10 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none group-focus-within:opacity-100" />
                           </div>
                         </div>
 
-                        {/* Enhanced Submit Button */}
-                        <div className="pt-4">
+                        {/* Enhanced Submit Button - Mobile Optimized */}
+                        <div className="pt-3 md:pt-4">
                           <Button 
                             type="submit"
-                            className="w-full group relative overflow-hidden bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-6 px-8 text-xl shadow-2xl hover:shadow-orange-500/50 transition-all duration-500 hover:scale-[1.03] border-0 rounded-2xl"
+                            className="w-full group relative overflow-hidden bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-3 md:py-4 px-4 md:px-6 text-sm md:text-base shadow-xl md:shadow-2xl hover:shadow-orange-500/50 transition-all duration-300 hover:scale-[1.02] border-0 rounded-lg md:rounded-xl"
                           >
-                            {/* Button Background Effects */}
-                            <span className="absolute inset-0 bg-gradient-to-r from-orange-400 to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-500"></span>
-                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-                            
-                            <span className="flex items-center justify-center relative z-10 gap-4">
-                              <Sparkles className="w-6 h-6 group-hover:rotate-12 transition-transform duration-500" />
-                              Send Project Details
-                              <ArrowRight className="w-6 h-6 transition-transform duration-500 group-hover:translate-x-2" />
+                            <span className="flex items-center justify-center relative z-10 gap-2 md:gap-3">
+                              <Sparkles className="w-4 h-4 md:w-5 md:h-5 group-hover:rotate-12 transition-transform duration-300" />
+                              Send Details
+                              <ArrowRight className="w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 group-hover:translate-x-1" />
                             </span>
                           </Button>
 
-                          <div className="text-center mt-6 space-y-2">
-                            <p className={`text-base font-medium ${
+                          <div className="text-center mt-3 md:mt-4 space-y-1 md:space-y-2">
+                            <p className={`text-sm md:text-base font-medium ${
                               theme === 'light' ? 'text-neutral-600' : 'text-neutral-300'
                             }`}>
-                              🚀 We'll respond within 24 hours with a detailed proposal
+                              🚀 24-hour response guarantee
                             </p>
-                            <p className={`text-sm ${
+                            <p className={`text-xs md:text-sm ${
                               theme === 'light' ? 'text-neutral-500' : 'text-neutral-400'
                             }`}>
-                              No spam, no sales pressure - just honest advice and transparent pricing
+                              No spam, just honest advice
                             </p>
                           </div>
                         </div>
@@ -1566,53 +1518,53 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Quick Stats Row */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {/* Quick Stats Row - Mobile Compact */}
+            <div className="grid grid-cols-3 gap-3 md:gap-6 mb-8 md:mb-12">
               <div className="text-center">
-                <div className="text-3xl font-bold text-orange-500 mb-2">50+</div>
-                <div className={`text-sm font-medium ${theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>
-                  Successful Projects
+                <div className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-500 mb-1 md:mb-2">50+</div>
+                <div className={`text-xs md:text-sm font-medium ${theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>
+                  Projects
                 </div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-orange-500 mb-2">100%</div>
-                <div className={`text-sm font-medium ${theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>
-                  Client Satisfaction
+                <div className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-500 mb-1 md:mb-2">100%</div>
+                <div className={`text-xs md:text-sm font-medium ${theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>
+                  Satisfaction
                 </div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-orange-500 mb-2">24hrs</div>
-                <div className={`text-sm font-medium ${theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>
-                  Response Time
+                <div className="text-xl md:text-2xl lg:text-3xl font-bold text-orange-500 mb-1 md:mb-2">24hrs</div>
+                <div className={`text-xs md:text-sm font-medium ${theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>
+                  Response
                 </div>
               </div>
             </div>
 
-            {/* Bottom Trust Elements */}
+            {/* Bottom Trust Elements - Mobile Compact */}
             <div className="reveal-on-scroll text-center">
-              <div className="flex flex-wrap items-center justify-center gap-8 mb-8">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-500" />
-                  <span className={`text-base font-medium ${theme === 'light' ? 'text-slate-600' : 'text-gray-300'}`}>
+              <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6 mb-4 md:mb-6">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-green-500" />
+                  <span className={`text-xs md:text-sm font-medium ${theme === 'light' ? 'text-slate-600' : 'text-gray-300'}`}>
                     Free Consultation
                   </span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-500" />
-                  <span className={`text-base font-medium ${theme === 'light' ? 'text-slate-600' : 'text-gray-300'}`}>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-green-500" />
+                  <span className={`text-xs md:text-sm font-medium ${theme === 'light' ? 'text-slate-600' : 'text-gray-300'}`}>
                     No Hidden Costs
                   </span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-500" />
-                  <span className={`text-base font-medium ${theme === 'light' ? 'text-slate-600' : 'text-gray-300'}`}>
-                    100% Satisfaction Guarantee
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-green-500" />
+                  <span className={`text-xs md:text-sm font-medium ${theme === 'light' ? 'text-slate-600' : 'text-gray-300'}`}>
+                    Satisfaction Guarantee
                   </span>
                 </div>
               </div>
               
-              <p className={`text-base ${theme === 'light' ? 'text-slate-500' : 'text-gray-400'}`}>
-                Trusted by businesses across Cyprus and beyond • Remote work available worldwide
+              <p className={`text-xs md:text-sm ${theme === 'light' ? 'text-slate-500' : 'text-gray-400'} px-4`}>
+                Trusted across Cyprus • Remote work worldwide
               </p>
             </div>
 

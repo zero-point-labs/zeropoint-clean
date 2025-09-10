@@ -38,6 +38,7 @@ const ChatbotSection: React.FC = () => {
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
   
   // Refs for animations
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -51,8 +52,11 @@ const ChatbotSection: React.FC = () => {
 
   // Function to initialize welcome message typing
   const initializeWelcomeMessage = useCallback(async () => {
-    // Wait for chat messages area to be fully visible
-    await new Promise(resolve => setTimeout(resolve, 1800)); // Wait for chat + internal elements to finish animating
+    // Wait for all entrance animations to complete first
+    const isMobile = window.innerWidth < 768;
+    const delay = isMobile ? 2200 : 2800; // Wait longer to ensure opening animation completes
+    await new Promise(resolve => setTimeout(resolve, delay));
+    
     setShowTypingAnimation(true);
     
     // Calculate typing duration based on message length
@@ -95,14 +99,18 @@ const ChatbotSection: React.FC = () => {
         scale: 0.8 
       });
 
-      // Main section entrance timeline
+      // Main section entrance timeline with mobile optimization
+      const isMobile = window.innerWidth < 768;
       const masterTl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
-          start: "top 80%",
+          start: isMobile ? "top 90%" : "top 80%", // Later trigger on mobile
           end: "bottom 20%",
           toggleActions: "play none none reverse",
+          markers: false, // Enable for debugging if needed
           onEnter: () => {
+            setHasAnimated(true);
+            
             // Start continuous animations after entrance
             
             // Bot floating animation
@@ -139,17 +147,79 @@ const ChatbotSection: React.FC = () => {
 
             // Start typing animation when entrance animation begins
             initializeWelcomeMessage();
+          },
+          onLeave: () => {
+            // Reset state when leaving viewport (scrolling down past section)
+            setShowTypingAnimation(false);
+            setMessages([]);
+            setHasAnimated(false);
+            
+            // Kill continuous animations
+            gsap.killTweensOf([bot, ...orbitElements, botGlow].filter(Boolean));
+          },
+          onEnterBack: () => {
+            // Replay everything when scrolling back up into view
+            setHasAnimated(true);
+            
+            // Reset all states first
+            setShowTypingAnimation(false);
+            setMessages([]);
+            
+            // Restart continuous animations
+            gsap.to(bot, {
+              y: "+=20",
+              rotation: 2,
+              duration: 6,
+              ease: "power1.inOut",
+              yoyo: true,
+              repeat: -1,
+            });
+
+            orbitElements.forEach((orbit, index) => {
+              gsap.to(orbit, {
+                rotation: 360,
+                duration: 8 + index * 2,
+                ease: "none",
+                repeat: -1,
+              });
+            });
+
+            if (botGlow) {
+              gsap.to(botGlow, {
+                scale: 1.1,
+                opacity: 0.8,
+                duration: 4,
+                ease: "power1.inOut",
+                yoyo: true,
+                repeat: -1,
+              });
+            }
+
+            // Restart typing animation after entrance completes
+            initializeWelcomeMessage();
+          },
+          onLeaveBack: () => {
+            // Reset state when scrolling back up past section
+            setShowTypingAnimation(false);
+            setMessages([]);
+            setHasAnimated(false);
+            
+            // Kill continuous animations
+            gsap.killTweensOf([bot, ...orbitElements, botGlow].filter(Boolean));
           }
         }
       });
 
-      // Staggered entrance sequence (like portfolio)
+      // Staggered entrance sequence (like portfolio) - Mobile optimized
+      const mobileDuration = isMobile ? 0.8 : 1;
+      const mobileOverlap = isMobile ? 0.4 : 0.7;
+      
       if (sectionBadge) {
         masterTl.to(sectionBadge, {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 1,
+          duration: mobileDuration,
           ease: "power3.out"
         });
       }
@@ -159,9 +229,9 @@ const ChatbotSection: React.FC = () => {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 1.2,
+          duration: mobileDuration * 1.2,
           ease: "power3.out"
-        }, "-=0.7");
+        }, `-=${mobileOverlap}`);
       }
 
       if (sectionSubtitle) {
@@ -169,53 +239,55 @@ const ChatbotSection: React.FC = () => {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 1,
+          duration: mobileDuration,
           ease: "power3.out"
-        }, "-=0.8");
+        }, `-=${mobileOverlap + 0.1}`);
       }
 
-      // Bot and chat entrance with staggered internal elements
+      // Bot and chat entrance with staggered internal elements - Mobile optimized
       masterTl.to(bot, {
         opacity: 1,
         scale: 1,
         y: 0,
-        duration: 1.4,
+        duration: isMobile ? 1 : 1.4,
         ease: "power3.out"
-      }, "-=0.6")
+      }, `-=${isMobile ? 0.3 : 0.6}`)
       .to(chat, {
         opacity: 1,
         scale: 1,
         y: 0,
-        duration: 1.2,
+        duration: isMobile ? 0.8 : 1.2,
         ease: "power3.out"
-      }, "-=0.8");
+      }, `-=${isMobile ? 0.4 : 0.8}`);
 
-      // Reveal chat internal elements with slight delay
+      // Reveal chat internal elements with slight delay - Mobile optimized
       const chatHeader = section.querySelector('.chat-header');
       const chatMessages = section.querySelector('.chat-messages');
       const chatInput = section.querySelector('.chat-input');
       
       if (chatHeader && chatMessages && chatInput) {
-        gsap.set([chatHeader, chatMessages, chatInput], { opacity: 0, y: 20 });
+        gsap.set([chatHeader, chatMessages, chatInput], { opacity: 0, y: isMobile ? 10 : 20 });
+        
+        const internalDuration = isMobile ? 0.5 : 0.8;
         
         masterTl.to(chatHeader, {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          duration: internalDuration,
           ease: "power2.out"
-        }, "-=0.3")
+        }, `-=${isMobile ? 0.2 : 0.3}`)
         .to(chatMessages, {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          duration: internalDuration,
           ease: "power2.out"
-        }, "-=0.6")
+        }, `-=${isMobile ? 0.3 : 0.6}`)
         .to(chatInput, {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          duration: internalDuration,
           ease: "power2.out"
-        }, "-=0.5");
+        }, `-=${isMobile ? 0.25 : 0.5}`);
       }
 
       if (featuresRow) {
@@ -223,9 +295,9 @@ const ChatbotSection: React.FC = () => {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 1,
+          duration: isMobile ? 0.6 : 1,
           ease: "power3.out"
-        }, "-=0.4");
+        }, `-=${isMobile ? 0.2 : 0.4}`);
       }
 
       // Background effects entrance
@@ -520,7 +592,7 @@ const ChatbotSection: React.FC = () => {
 
                 {/* Messages Area - Enhanced Charcoal */}
                 <div className="chat-messages h-72 md:h-80 overflow-y-auto p-3 md:p-4 space-y-2.5 md:space-y-3">
-                  {/* Typing Animation */}
+                  {/* Typing Animation - Only show when typing, hide regular messages */}
                   {showTypingAnimation && (
                     <div className="flex justify-start">
                       <div className="max-w-[80%] md:max-w-xs px-3 py-2.5 rounded-xl bg-gradient-to-br from-black/50 via-slate-900/40 to-black/60 text-slate-200 border border-slate-700/10 backdrop-blur-md shadow-sm">
@@ -537,8 +609,8 @@ const ChatbotSection: React.FC = () => {
                     </div>
                   )}
                   
-                  {/* Regular Messages */}
-                  {messages.map((message) => (
+                  {/* Regular Messages - Only show when not typing */}
+                  {!showTypingAnimation && messages.map((message) => (
                     <div
                       key={message.id}
                       className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}
