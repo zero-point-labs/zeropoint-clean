@@ -1340,12 +1340,12 @@ export default function Home() {
                 <SparklesText 
                   colors={{ first: "#F97316", second: "#EA580C" }}
                   sparklesCount={15}
-                  className="block mb-0 sm:mb-1 md:mb-2 break-words leading-tight"
+                  className="block mb-0 sm:mb-1 md:mb-2 break-words leading-tight text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl"
                 >
                   Let's Build Something
                 </SparklesText>
                 <AuroraText 
-                  className="block break-words leading-tight"
+                  className="block break-words leading-tight text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl"
                   colors={["#FDE047", "#FDBA74", "#F97316", "#EA580C"]}
                 >
                   Extraordinary
