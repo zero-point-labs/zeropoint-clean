@@ -1313,14 +1313,14 @@ export default function Home() {
         {/* CTA Section - "Ready to Transform" */}
         <section 
           ref={ctaRef}
-          className={`relative min-h-screen flex items-center justify-center px-4 md:px-8 py-20 md:py-32 overflow-x-hidden ${
+          className={`relative min-h-screen flex items-center justify-center px-3 sm:px-4 md:px-8 py-20 md:py-32 overflow-hidden ${
             theme === 'light' ? 'text-slate-900' : 'text-slate-100'
           }`}
         >
-          <div className="container mx-auto max-w-7xl relative z-10">
+          <div className="container mx-auto max-w-7xl relative z-10 w-full">
             
             {/* CTA Title */}
-            <div className="cta-title text-center mb-24">
+            <div className="cta-title text-center mb-16 sm:mb-20 md:mb-24 px-2 sm:px-4 md:px-0">
               <div className="reveal-on-scroll mb-12">
                 <Badge
                   variant="outline"
@@ -1336,16 +1336,16 @@ export default function Home() {
                 </Badge>
               </div>
               
-              <h2 className="reveal-on-scroll text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-8 md:mb-12 leading-tight px-2 md:px-0">
+              <h2 className="reveal-on-scroll text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-8 md:mb-12 leading-[1.1] px-4 sm:px-2 md:px-0 max-w-full overflow-hidden hyphens-auto">
                 <SparklesText 
                   colors={{ first: "#F97316", second: "#EA580C" }}
                   sparklesCount={15}
-                  className="block mb-4 md:mb-6"
+                  className="block mb-1 sm:mb-2 md:mb-4 break-words leading-none"
                 >
                   Let's Build Something
                 </SparklesText>
                 <AuroraText 
-                  className="block"
+                  className="block break-words leading-none"
                   colors={["#FDE047", "#FDBA74", "#F97316", "#EA580C"]}
                 >
                   Extraordinary
