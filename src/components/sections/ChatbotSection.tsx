@@ -7,7 +7,6 @@ import { SparklesText } from "@/components/magicui/sparkles-text";
 import { AuroraText } from "@/components/magicui/aurora-text";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
-import { TypingAnimation } from "@/components/magicui/typing-animation";
 import { useTheme } from "@/lib/theme-context";
 import { 
   Send, 
@@ -20,10 +19,7 @@ import {
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// Register GSAP plugins
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
+// GSAP plugins will be registered in useEffect to avoid hydration issues
 
 interface ChatMessage {
   id: string;
@@ -34,10 +30,15 @@ interface ChatMessage {
 
 const ChatbotSection: React.FC = () => {
   const { theme } = useTheme();
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  // Initialize with welcome message immediately to prevent disappearing
+  const [messages, setMessages] = useState<ChatMessage[]>(() => [{
+    id: 'welcome-persistent',
+    text: "Hi! I'm Zero Point AI. Ask me about projects, quotes, or technical questions.",
+    isBot: true,
+    timestamp: new Date()
+  }]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
   
   // Refs for animations
@@ -46,41 +47,19 @@ const ChatbotSection: React.FC = () => {
   const chatRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Initial welcome message - minimal and focused
-  const welcomeMessage = "Hi! I'm Zero Point AI. Ask me about projects, quotes, or technical questions.";
-  const [showTypingAnimation, setShowTypingAnimation] = useState(false);
-
-  // Function to initialize welcome message typing
-  const initializeWelcomeMessage = useCallback(async () => {
-    // Wait for all entrance animations to complete first
-    const isMobile = window.innerWidth < 768;
-    const delay = isMobile ? 2200 : 2800; // Wait longer to ensure opening animation completes
-    await new Promise(resolve => setTimeout(resolve, delay));
-    
-    setShowTypingAnimation(true);
-    
-    // Calculate typing duration based on message length
-    const typingDuration = welcomeMessage.length * 50 + 300; // 50ms per character + shorter buffer
-    
-    await new Promise(resolve => setTimeout(resolve, typingDuration));
-    setShowTypingAnimation(false);
-    
-    const botMessage: ChatMessage = {
-      id: 'welcome',
-      text: welcomeMessage,
-      isBot: true,
-      timestamp: new Date()
-    };
-    
-    setMessages([botMessage]);
-  }, [welcomeMessage]);
+  // Welcome message is now initialized directly in useState
 
   useEffect(() => {
+    // Register GSAP plugins on client side only
+    gsap.registerPlugin(ScrollTrigger);
+    
     const section = sectionRef.current;
     const bot = botRef.current;
     const chat = chatRef.current;
     
     if (!section || !bot || !chat) return;
+
+    // No need to initialize welcome message - it's already in initial state
 
     // Create GSAP context for cleanup
     const ctx = gsap.context(() => {
@@ -99,19 +78,19 @@ const ChatbotSection: React.FC = () => {
         scale: 0.8 
       });
 
-      // Main section entrance timeline with mobile optimization
+      // Main section entrance timeline with mobile optimization and repeatable animations
       const isMobile = window.innerWidth < 768;
       const masterTl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
-          start: isMobile ? "top 90%" : "top 80%", // Later trigger on mobile
-          end: "bottom 20%",
+          start: isMobile ? "top 90%" : "top 85%", // Match floating islands trigger
+          end: "bottom 15%", // Match floating islands end point
           toggleActions: "play none none reverse",
-          markers: false, // Enable for debugging if needed
+          markers: false,
           onEnter: () => {
             setHasAnimated(true);
             
-            // Start continuous animations after entrance
+            // Start continuous animations after entrance - same as floating islands
             
             // Bot floating animation
             gsap.to(bot, {
@@ -144,28 +123,21 @@ const ChatbotSection: React.FC = () => {
                 repeat: -1,
               });
             }
-
-            // Start typing animation when entrance animation begins
-            initializeWelcomeMessage();
+            
+            // Keep welcome message persistent - don't change messages
           },
           onLeave: () => {
-            // Reset state when leaving viewport (scrolling down past section)
-            setShowTypingAnimation(false);
-            setMessages([]);
+            // Reset animation state but keep messages persistent
             setHasAnimated(false);
             
             // Kill continuous animations
             gsap.killTweensOf([bot, ...orbitElements, botGlow].filter(Boolean));
           },
           onEnterBack: () => {
-            // Replay everything when scrolling back up into view
+            // Replay everything when scrolling back up into view - same as floating islands
             setHasAnimated(true);
             
-            // Reset all states first
-            setShowTypingAnimation(false);
-            setMessages([]);
-            
-            // Restart continuous animations
+            // Restart continuous animations (keep messages persistent)
             gsap.to(bot, {
               y: "+=20",
               rotation: 2,
@@ -194,14 +166,11 @@ const ChatbotSection: React.FC = () => {
                 repeat: -1,
               });
             }
-
-            // Restart typing animation after entrance completes
-            initializeWelcomeMessage();
+            
+            // Keep welcome message persistent - don't reset messages
           },
           onLeaveBack: () => {
-            // Reset state when scrolling back up past section
-            setShowTypingAnimation(false);
-            setMessages([]);
+            // Reset animation state but keep messages persistent
             setHasAnimated(false);
             
             // Kill continuous animations
@@ -356,7 +325,7 @@ const ChatbotSection: React.FC = () => {
     return () => {
       ctx.revert();
     };
-  }, [initializeWelcomeMessage]);
+  }, []); // No dependencies needed since welcome message is static
 
   // Typing animation simulation
   const simulateTyping = async (message: string) => {
@@ -592,25 +561,8 @@ const ChatbotSection: React.FC = () => {
 
                 {/* Messages Area - Enhanced Charcoal */}
                 <div className="chat-messages h-72 md:h-80 overflow-y-auto p-3 md:p-4 space-y-2.5 md:space-y-3">
-                  {/* Typing Animation - Only show when typing, hide regular messages */}
-                  {showTypingAnimation && (
-                    <div className="flex justify-start">
-                      <div className="max-w-[80%] md:max-w-xs px-3 py-2.5 rounded-xl bg-gradient-to-br from-black/50 via-slate-900/40 to-black/60 text-slate-200 border border-slate-700/10 backdrop-blur-md shadow-sm">
-                        <div className="flex items-center gap-1.5 mb-1">
-                          <Bot className="w-3 h-3 text-orange-400/90" />
-                          <span className="text-xs font-medium text-stone-300/80">AI</span>
-                        </div>
-                        <TypingAnimation 
-                          text={welcomeMessage}
-                          duration={50}
-                          className="text-xs leading-relaxed font-normal text-slate-200"
-                        />
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Regular Messages - Only show when not typing */}
-                  {!showTypingAnimation && messages.map((message) => (
+                  {/* Regular Messages - Clean display without typing animation */}
+                  {messages.map((message) => (
                     <div
                       key={message.id}
                       className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}

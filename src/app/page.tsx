@@ -44,10 +44,7 @@ import {
 } from "@/components/ui/resizable-navbar";
 import { useState } from 'react';
 
-// Register GSAP plugins
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
+// GSAP plugins will be registered in useEffect to avoid hydration issues
 
 interface IslandData {
   id: string;
@@ -128,6 +125,9 @@ export default function Home() {
   ];
 
   useEffect(() => {
+    // Register GSAP plugins on client side only
+    gsap.registerPlugin(ScrollTrigger);
+    
     // Initialize Lenis with optimized settings
     const lenis = new Lenis({
       duration: 1.5,
@@ -356,7 +356,7 @@ export default function Home() {
           });
         }
 
-        // Individual island animations (like FloatingIslandsLenis)
+        // Individual island animations (like FloatingIslandsLenis) - Enhanced with Repeatable Animations
         portfolioCards.forEach((card, index) => {
           const islandImage = card.querySelector('.island-image');
           const islandContent = card.querySelector('.island-content');
@@ -368,12 +368,12 @@ export default function Home() {
             gsap.set(islandContent, { opacity: 0, y: 50 });
           }
 
-          // Main island entrance animation
+          // Main island entrance animation with repeatable triggers
           const islandTl = gsap.timeline({
             scrollTrigger: {
               trigger: card,
-              start: "top 80%",
-              end: "bottom 20%",
+              start: "top 85%",
+              end: "bottom 15%",
               toggleActions: "play none none reverse",
               onEnter: () => {
                 // Start continuous animations after entrance
@@ -411,6 +411,47 @@ export default function Home() {
                     repeat: -1,
                   });
                 });
+              },
+              onLeave: () => {
+                // Kill animations when leaving viewport
+                gsap.killTweensOf([islandImage, islandGlow, ...orbitElements].filter(Boolean));
+              },
+              onEnterBack: () => {
+                // Restart animations when scrolling back up
+                if (islandImage) {
+                  gsap.to(islandImage, {
+                    y: "+=20",
+                    rotation: index % 2 === 0 ? 2 : -2,
+                    duration: 4 + index,
+                    ease: "power1.inOut",
+                    yoyo: true,
+                    repeat: -1,
+                  });
+                }
+
+                if (islandGlow) {
+                  gsap.to(islandGlow, {
+                    scale: 1.1,
+                    opacity: 0.8,
+                    duration: 3 + index * 0.5,
+                    ease: "power1.inOut",
+                    yoyo: true,
+                    repeat: -1,
+                  });
+                }
+
+                orbitElements.forEach((orbit, orbitIndex) => {
+                  gsap.to(orbit, {
+                    rotation: 360,
+                    duration: 10 + orbitIndex * 3,
+                    ease: "none",
+                    repeat: -1,
+                  });
+                });
+              },
+              onLeaveBack: () => {
+                // Kill animations when scrolling up past section
+                gsap.killTweensOf([islandImage, islandGlow, ...orbitElements].filter(Boolean));
               }
             }
           });
@@ -443,7 +484,7 @@ export default function Home() {
             }
           });
 
-          // Content reveal on scroll
+          // Content reveal on scroll - Enhanced with repeatable behavior
           if (islandContent) {
             const revealElements = islandContent.querySelectorAll('.reveal-text');
             if (revealElements.length > 0) {
@@ -457,8 +498,9 @@ export default function Home() {
                   ease: "power2.out",
                   scrollTrigger: {
                     trigger: islandContent,
-                    start: "top 70%",
-                    toggleActions: "play none none reverse"
+                    start: "top 75%",
+                    end: "bottom 25%",
+                    toggleActions: "play reverse play reverse" // This makes it repeat on scroll
                   }
                 }
               );
@@ -1265,6 +1307,9 @@ export default function Home() {
         {/* AI Chatbot Section */}
         <ChatbotSection />
 
+        {/* Additional Spacing Between Sections */}
+        <div className="py-16 md:py-24"></div>
+
         {/* CTA Section - "Ready to Transform" */}
         <section 
           ref={ctaRef}
@@ -1291,11 +1336,11 @@ export default function Home() {
                 </Badge>
               </div>
               
-              <h2 className="reveal-on-scroll text-5xl md:text-7xl lg:text-8xl font-bold mb-12">
+              <h2 className="reveal-on-scroll text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-8 md:mb-12 leading-tight px-2 md:px-0">
                 <SparklesText 
                   colors={{ first: "#F97316", second: "#EA580C" }}
                   sparklesCount={15}
-                  className="block mb-6"
+                  className="block mb-4 md:mb-6"
                 >
                   Let's Build Something
                 </SparklesText>
@@ -1307,7 +1352,7 @@ export default function Home() {
                 </AuroraText>
               </h2>
               
-              <p className={`reveal-on-scroll text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed ${
+              <p className={`reveal-on-scroll text-base md:text-xl lg:text-2xl max-w-4xl mx-auto leading-relaxed px-4 md:px-0 ${
                 theme === 'light' ? 'text-slate-600' : 'text-gray-300'
               }`}>
                 Join 50+ successful businesses who trusted Zero Point Labs to bring their vision to life. 
@@ -1381,7 +1426,7 @@ export default function Home() {
                   </div>
                 </div>
                 
-                <h3 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-6 leading-tight">
+                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 md:mb-6 leading-tight px-2 md:px-0">
                   <SparklesText 
                     colors={{ first: "#F97316", second: "#EA580C" }}
                     sparklesCount={6}
