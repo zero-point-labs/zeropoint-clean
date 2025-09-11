@@ -14,7 +14,8 @@ import {
   Sparkles, 
   Bot,
   Mic,
-  Paperclip
+  Paperclip,
+  ArrowDown
 } from "lucide-react";
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -41,11 +42,18 @@ const ChatbotSection: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
   
-  // Refs for animations
+  // Enhanced scroll state management
+  const [isUserScrolledUp, setIsUserScrolledUp] = useState(false);
+  const [hasNewMessagesBelow, setHasNewMessagesBelow] = useState(false);
+  const [lastMessageCount, setLastMessageCount] = useState(0);
+  
+  // Refs for animations and scroll management
   const sectionRef = useRef<HTMLDivElement>(null);
   const botRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const scrollThrottleRef = useRef<NodeJS.Timeout | null>(null);
 
   // Welcome message is now initialized directly in useState
 
@@ -327,6 +335,68 @@ const ChatbotSection: React.FC = () => {
     };
   }, []); // No dependencies needed since welcome message is static
 
+  // Enhanced scroll management functions
+  const checkScrollPosition = useCallback(() => {
+    const container = chatContainerRef.current;
+    if (!container) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = container;
+    const scrollBottom = scrollHeight - clientHeight - scrollTop;
+    
+    // User is considered at bottom if within 20px of bottom
+    const isAtBottom = scrollBottom <= 20;
+    
+    setIsUserScrolledUp(!isAtBottom);
+    
+    // If user scrolled back to bottom, clear new messages indicator
+    if (isAtBottom) {
+      setHasNewMessagesBelow(false);
+    }
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    // Throttle scroll events for performance
+    if (scrollThrottleRef.current) {
+      clearTimeout(scrollThrottleRef.current);
+    }
+    
+    scrollThrottleRef.current = setTimeout(() => {
+      checkScrollPosition();
+    }, 100);
+  }, [checkScrollPosition]);
+
+  const scrollToBottomSmooth = useCallback((force = false) => {
+    if (!messagesEndRef.current) return;
+    
+    // Only auto-scroll if user hasn't manually scrolled up or if forced
+    if (!isUserScrolledUp || force) {
+      messagesEndRef.current.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest'
+      });
+      
+      // Update scroll state immediately after scrolling
+      setTimeout(() => {
+        setIsUserScrolledUp(false);
+        setHasNewMessagesBelow(false);
+      }, 100);
+    }
+  }, [isUserScrolledUp]);
+
+  const scrollToBottomInstant = useCallback(() => {
+    if (!messagesEndRef.current) return;
+    
+    messagesEndRef.current.scrollIntoView({ 
+      behavior: 'auto',
+      block: 'end',
+      inline: 'nearest'
+    });
+    
+    setIsUserScrolledUp(false);
+    setHasNewMessagesBelow(false);
+  }, []);
+
   // Typing animation simulation
   const simulateTyping = async (message: string) => {
     setIsTyping(true);
@@ -359,31 +429,119 @@ const ChatbotSection: React.FC = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const currentMessage = inputMessage;
     setInputMessage('');
 
-    // Simulate bot response
-    const responses = [
-      "I'd love to help you with that! Can you tell me more about your specific requirements?",
-      "That's a great question! Let me connect you with our team for a detailed discussion.",
-      "Perfect! I'll help you get started. What's your timeline for this project?",
-      "Excellent choice! Our team specializes in that. Would you like to schedule a consultation?"
-    ];
-    
-    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-    await simulateTyping(randomResponse);
+    // Start typing animation
+    setIsTyping(true);
+
+    try {
+      // Call real GPT-4 API
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: [
+            {
+              id: userMessage.id,
+              role: 'user',
+              content: currentMessage,
+              timestamp: new Date()
+            }
+          ],
+          conversationId: `homepage-${Date.now()}`,
+          settings: {
+            personality: 'professional',
+            maxTokens: 1000,
+            autoCollectContact: true
+          }
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response');
+      }
+
+      const data = await response.json();
+      
+      // Simulate typing delay to maintain smooth UX
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setIsTyping(false);
+
+      // Add real AI response
+      const botResponse: ChatMessage = {
+        id: data.message.id,
+        text: data.message.content || "I'm here to help! Could you tell me more about your project?",
+        isBot: true,
+        timestamp: new Date(data.message.timestamp)
+      };
+      
+      setMessages(prev => [...prev, botResponse]);
+
+    } catch (error) {
+      console.error('Chat error:', error);
+      
+      // Fallback response on error
+      setIsTyping(false);
+      const errorResponse: ChatMessage = {
+        id: Date.now().toString(),
+        text: "I'm having trouble connecting right now. Please try again or contact us directly at hello@zeropointlabs.com for immediate assistance!",
+        isBot: true,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, errorResponse]);
+    }
   };
 
-  // Scroll to bottom when new messages arrive (only for user interactions, not welcome message)
+  // Enhanced auto-scroll management with message detection
   useEffect(() => {
-    // Only auto-scroll if there are multiple messages (user has interacted)
-    if (messages.length > 1) {
-      messagesEndRef.current?.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'nearest', // Prevents page scroll, only scrolls within container
-        inline: 'nearest'
-      });
+    // Check if new messages were added
+    if (messages.length > lastMessageCount) {
+      setLastMessageCount(messages.length);
+      
+      // If user is scrolled up, show new messages indicator instead of auto-scrolling
+      if (isUserScrolledUp) {
+        setHasNewMessagesBelow(true);
+      } else {
+        // Auto-scroll to bottom for new messages if user is at bottom
+        setTimeout(() => {
+          scrollToBottomSmooth();
+        }, 100);
+      }
     }
-  }, [messages]);
+  }, [messages.length, lastMessageCount, isUserScrolledUp, scrollToBottomSmooth]);
+
+  // Auto-scroll for typing indicator only if user is at bottom
+  useEffect(() => {
+    if (isTyping && !isUserScrolledUp) {
+      const timer = setTimeout(() => {
+        scrollToBottomSmooth();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isTyping, isUserScrolledUp, scrollToBottomSmooth]);
+
+  // Scroll event listener setup
+  useEffect(() => {
+    const container = chatContainerRef.current;
+    if (!container) return;
+
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Initial scroll position check
+    checkScrollPosition();
+
+    return () => {
+      container.removeEventListener('scroll', handleScroll);
+      if (scrollThrottleRef.current) {
+        clearTimeout(scrollThrottleRef.current);
+      }
+    };
+  }, [handleScroll, checkScrollPosition]);
 
   return (
     <section 
@@ -559,8 +717,16 @@ const ChatbotSection: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Messages Area - Enhanced Charcoal */}
-                <div className="chat-messages h-72 md:h-80 overflow-y-auto p-3 md:p-4 space-y-2.5 md:space-y-3">
+                {/* Messages Area - Enhanced with Smart Scrolling */}
+                <div 
+                  ref={chatContainerRef}
+                  className="chat-messages relative h-72 md:h-80 overflow-y-auto p-3 md:p-4 space-y-2.5 md:space-y-3 scroll-smooth scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-600/30 hover:scrollbar-thumb-slate-500/50 transition-all duration-200"
+                  style={{ 
+                    scrollBehavior: 'smooth',
+                    WebkitOverflowScrolling: 'touch' // Enhanced mobile scrolling
+                  }}
+                  onScroll={handleScroll}
+                >
                   {/* Regular Messages - Clean display without typing animation */}
                   {messages.map((message) => (
                     <div
@@ -583,6 +749,9 @@ const ChatbotSection: React.FC = () => {
                     </div>
                   ))}
 
+                  {/* Scroll anchor for auto-scroll */}
+                  <div ref={messagesEndRef} />
+
                   {/* Typing Indicator - Charcoal */}
                   {isTyping && (
                     <div className="flex justify-start">
@@ -602,6 +771,35 @@ const ChatbotSection: React.FC = () => {
                   )}
                   
                   <div ref={messagesEndRef} />
+
+                  {/* New Messages Indicator & Scroll to Bottom Button */}
+                  {hasNewMessagesBelow && (
+                    <div className="absolute bottom-4 right-4 z-10">
+                      <button
+                        onClick={() => scrollToBottomSmooth(true)}
+                        className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white text-xs rounded-full shadow-lg hover:shadow-orange-500/25 transition-all duration-300 hover:scale-105 backdrop-blur-md"
+                        style={{ 
+                          animation: 'pulse 2s infinite',
+                          boxShadow: '0 4px 15px rgba(251, 146, 60, 0.4)' 
+                        }}
+                      >
+                        <span className="font-medium">New messages</span>
+                        <ArrowDown className="w-3 h-3 animate-bounce" />
+                      </button>
+                    </div>
+                  )}
+                  
+                  {/* Scroll to Bottom Button (always visible when scrolled up) */}
+                  {isUserScrolledUp && !hasNewMessagesBelow && (
+                    <div className="absolute bottom-4 right-4 z-10">
+                      <button
+                        onClick={() => scrollToBottomSmooth(true)}
+                        className="w-8 h-8 bg-black/60 hover:bg-black/80 text-slate-300 hover:text-white rounded-full flex items-center justify-center shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110"
+                      >
+                        <ArrowDown className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Message Input - Dark Transparent */}
@@ -726,7 +924,7 @@ const ChatbotSection: React.FC = () => {
         ))}
       </div>
 
-      {/* Animations */}
+      {/* Enhanced Animations & Scrollbar Styles */}
       <style jsx>{`
         @keyframes float {
           0%, 100% { 
@@ -736,9 +934,79 @@ const ChatbotSection: React.FC = () => {
             transform: translateY(-15px); 
           }
         }
+        
+        /* Enhanced scrollbar for chat messages */
+        .chat-messages::-webkit-scrollbar {
+          width: 6px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-track {
+          background: transparent;
+          border-radius: 3px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb {
+          background: rgba(71, 85, 105, 0.4);
+          border-radius: 3px;
+          transition: background-color 0.2s ease;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+          background: rgba(71, 85, 105, 0.6);
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb:active {
+          background: rgba(71, 85, 105, 0.8);
+        }
+        
+        /* Enhanced mobile scrolling */
+        .chat-messages {
+          -webkit-overflow-scrolling: touch;
+          overscroll-behavior: contain;
+        }
+        
+        /* Smooth scrolling for all devices */
+        @supports (scroll-behavior: smooth) {
+          .chat-messages {
+            scroll-behavior: smooth;
+          }
+        }
+        
+        /* Hide scrollbar on mobile but keep functionality */
+        @media (max-width: 768px) {
+          .chat-messages::-webkit-scrollbar {
+            width: 3px;
+          }
+          
+          .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(71, 85, 105, 0.3);
+          }
+        }
+        
+        /* Focus indicators for accessibility */
+        .chat-messages:focus-visible {
+          outline: 2px solid rgba(251, 146, 60, 0.5);
+          outline-offset: 2px;
+          border-radius: 8px;
+        }
       `}</style>
     </section>
   );
 };
 
 export default ChatbotSection;
+
+// Add these styles to your global CSS or add a <style> tag
+// .chat-messages::-webkit-scrollbar {
+//   width: 4px;
+// }
+// .chat-messages::-webkit-scrollbar-track {
+//   background: transparent;
+// }
+// .chat-messages::-webkit-scrollbar-thumb {
+//   background: rgba(71, 85, 105, 0.3);
+//   border-radius: 2px;
+// }
+// .chat-messages::-webkit-scrollbar-thumb:hover {
+//   background: rgba(71, 85, 105, 0.5);
+// }

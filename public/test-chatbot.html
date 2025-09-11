@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Chatbot API</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { display: flex; flex-direction: column; gap: 20px; }
+        textarea { width: 100%; height: 100px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        .response { background: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-wrap; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test ZeroPoint AI Chatbot</h1>
+        
+        <div>
+            <h3>Send a test message:</h3>
+            <textarea id="messageInput" placeholder="Type your message here...">Hello, I need a website for my business</textarea>
+            <br><br>
+            <button onclick="sendMessage()">Send Message</button>
+        </div>
+        
+        <div id="response"></div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const responseDiv = document.getElementById('response');
+            const message = messageInput.value.trim();
+            
+            if (!message) {
+                alert('Please enter a message');
+                return;
+            }
+            
+            responseDiv.innerHTML = 'Sending message...';
+            
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        messages: [
+                            {
+                                id: 'test-' + Date.now(),
+                                role: 'user',
+                                content: message,
+                                timestamp: new Date().toISOString()
+                            }
+                        ],
+                        conversationId: 'test-conversation-' + Date.now(),
+                        settings: {
+                            personality: 'professional',
+                            temperature: 0.7,
+                            maxTokens: 1000,
+                            autoCollectContact: true
+                        }
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                
+                responseDiv.className = 'response';
+                responseDiv.innerHTML = 
+                    `<strong>API Response:</strong>\n\n` +
+                    `<strong>Message:</strong> ${data.message?.content || 'No content'}\n\n` +
+                    `<strong>Conversation ID:</strong> ${data.conversationId}\n\n` +
+                    `<strong>Metadata:</strong>\n${JSON.stringify(data.message?.metadata, null, 2)}`;
+                    
+            } catch (error) {
+                console.error('Error:', error);
+                responseDiv.className = 'response error';
+                responseDiv.innerHTML = `<strong>Error:</strong>\n${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
