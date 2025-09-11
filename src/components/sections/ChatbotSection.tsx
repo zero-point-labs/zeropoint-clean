@@ -8,6 +8,7 @@ import { AuroraText } from "@/components/magicui/aurora-text";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
 import { useTheme } from "@/lib/theme-context";
+import ReactMarkdown from 'react-markdown';
 import { 
   Send, 
   MessageCircle, 
@@ -28,6 +29,37 @@ interface ChatMessage {
   isBot: boolean;
   timestamp: Date;
 }
+
+// Enhanced markdown components for beautiful bot responses
+const MarkdownComponents = (theme: 'light' | 'dark') => ({
+  p: ({ children }: any) => <p className="mb-3 last:mb-0 leading-relaxed text-slate-200">{children}</p>,
+  strong: ({ children }: any) => <strong className="font-bold text-orange-400">{children}</strong>,
+  em: ({ children }: any) => <em className="italic text-slate-300">{children}</em>,
+  ul: ({ children }: any) => <ul className="list-disc list-inside space-y-2 mb-3 ml-1">{children}</ul>,
+  ol: ({ children }: any) => <ol className="list-decimal list-inside space-y-2 mb-3 ml-1">{children}</ol>,
+  li: ({ children }: any) => <li className="text-slate-200 leading-relaxed">{children}</li>,
+  h1: ({ children }: any) => <h1 className="text-base font-bold text-orange-400 mb-2 mt-1">{children}</h1>,
+  h2: ({ children }: any) => <h2 className="text-sm font-bold text-orange-400 mb-2 mt-1">{children}</h2>,
+  h3: ({ children }: any) => <h3 className="text-sm font-semibold text-orange-400 mb-1 mt-1">{children}</h3>,
+  code: ({ children }: any) => (
+    <code className="px-2 py-1 rounded text-xs font-mono bg-slate-800/80 text-orange-300 border border-slate-700/50">
+      {children}
+    </code>
+  ),
+  blockquote: ({ children }: any) => (
+    <blockquote className="border-l-3 border-orange-500/60 pl-4 italic text-slate-300 bg-slate-800/30 rounded-r py-2 my-2">
+      {children}
+    </blockquote>
+  ),
+  // Handle line breaks properly  
+  br: () => <br className="my-1" />,
+  // Links with proper styling
+  a: ({ href, children }: any) => (
+    <a href={href} className="text-orange-400 hover:text-orange-300 underline underline-offset-2 font-medium" target="_blank" rel="noopener noreferrer">
+      {children}
+    </a>
+  ),
+});
 
 const ChatbotSection: React.FC = () => {
   const { theme } = useTheme();
@@ -733,7 +765,7 @@ const ChatbotSection: React.FC = () => {
                       key={message.id}
                       className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}
                     >
-                      <div className={`max-w-[80%] md:max-w-xs px-3 py-2.5 rounded-xl backdrop-blur-md shadow-sm ${
+                      <div className={`max-w-[90%] md:max-w-sm px-4 py-3 rounded-xl backdrop-blur-md shadow-sm ${
                         message.isBot
                           ? 'bg-gradient-to-br from-black/50 via-slate-900/40 to-black/60 text-slate-200 border border-slate-700/10'
                           : 'bg-gradient-to-r from-orange-600/90 to-amber-600/90 text-white border border-orange-500/20'
@@ -744,7 +776,15 @@ const ChatbotSection: React.FC = () => {
                             <span className="text-xs font-medium text-stone-300/80">AI</span>
                           </div>
                         )}
-                        <p className="text-xs leading-relaxed">{message.text}</p>
+                        {message.isBot ? (
+                          <div className="text-sm leading-relaxed prose prose-sm max-w-none prose-invert">
+                            <ReactMarkdown components={MarkdownComponents(theme)}>
+                              {message.text}
+                            </ReactMarkdown>
+                          </div>
+                        ) : (
+                          <p className="text-sm leading-relaxed">{message.text}</p>
+                        )}
                       </div>
                     </div>
                   ))}
